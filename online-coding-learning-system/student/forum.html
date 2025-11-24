@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forum — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="course-list.html" class="nav-link">Courses</a>
+        <a href="materials.html" class="nav-link">Materials</a>
+        <a href="progress.html" class="nav-link">Progress</a>
+        <a href="forum.html" class="nav-link active">Forum</a>
+      </nav>
+      <a href="post-question.html" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Post question
+      </a>
+    </div>
+  </header>
+
+  <main class="container forum-wrap">
+    <aside class="forum-tags card">
+      <h3>Tags</h3>
+      <ul class="tag-list">
+        <li><span class="tag">javascript</span></li>
+        <li><span class="tag">css</span></li>
+        <li><span class="tag">html</span></li>
+        <li><span class="tag">beginner</span></li>
+      </ul>
+    </aside>
+
+    <!-- Semua pertanyaan akan dimuat di sini -->
+    <section class="forum-threads" id="forum-threads"></section>
+  </main>
+
+  <script>
+    // Inisialisasi pertanyaan default hanya sekali
+    if (!localStorage.getItem("forumPosts")) {
+      const defaultPosts = [
+        {
+          title: "How do closures work in JS?",
+          tag: "javascript",
+          content: "I'm confused about variables captured by functions—any simple example?",
+          author: "Rina",
+          time: "2h ago"
+        },
+        {
+          title: "Flexbox: align-items vs justify-content?",
+          tag: "css",
+          content: "When should I use each? Tips with common layouts appreciated.",
+          author: "Dio",
+          time: "5h ago"
+        }
+      ];
+      localStorage.setItem("forumPosts", JSON.stringify(defaultPosts));
+    }
+
+    // Render semua pertanyaan dari localStorage
+   function renderForumPosts() {
+  const container = document.getElementById("forum-threads");
+  const posts = JSON.parse(localStorage.getItem("forumPosts") || "[]");
+
+  container.innerHTML = "";
+
+  posts.forEach((post, index) => {
+    const article = document.createElement("article");
+    article.className = "thread card card-elevated";
+    article.innerHTML = `
+      <div class="thread-top">
+        <h3>${post.title}</h3>
+        <div class="thread-meta text-muted">
+          <span>by <strong>${post.author}</strong></span> · <span>${post.time}</span> · <span class="tag clickable" data-tag="${post.tag}">${post.tag}</span>
+        </div>
+      </div>
+      <p>${post.content}</p>
+      <div class="thread-actions">
+        <button class="btn btn-ghost"><i class="fa-regular fa-comment"></i> Reply</button>
+        <button class="btn btn-ghost"><i class="fa-regular fa-thumbs-up"></i> Upvote</button>
+        <button class="btn btn-danger delete-btn" data-index="${index}"><i class="fa-solid fa-trash"></i> Delete</button>
+      </div>
+      <div class="reply-area">
+        <input type="text" class="input" placeholder="Write a reply..." />
+        <button class="btn btn-primary">Send</button>
+      </div>
+    `;
+    container.appendChild(article);
+  });
+
+  // Tambahkan event listener untuk tombol delete
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      const index = this.getAttribute("data-index");
+      const posts = JSON.parse(localStorage.getItem("forumPosts") || "[]");
+      posts.splice(index, 1);
+      localStorage.setItem("forumPosts", JSON.stringify(posts));
+      renderForumPosts(); // refresh tampilan
+    });
+  });
+
+  // Tambahkan event listener untuk filter tag
+  document.querySelectorAll(".tag.clickable").forEach(tag => {
+    tag.addEventListener("click", function() {
+      const selectedTag = this.getAttribute("data-tag");
+      filterByTag(selectedTag);
+    });
+  });
+}
+
+  </script>
+</body>
+</html>

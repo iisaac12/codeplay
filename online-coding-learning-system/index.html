@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LearnCode — Online Coding Learning System</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand">
+        <img src="assets/images/logo.png" alt="LearnCode Logo" class="logo" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="nav">
+        <a href="student/course-list.html" class="nav-link">Courses</a>
+        <a href="student/forum.html" class="nav-link">Forum</a>
+        <a href="auth/login.html" class="btn btn-outline">Log in</a>
+        <a href="auth/register.html" class="btn btn-primary">Get started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1 class="h1">Learn to code with guided tutorials and quizzes</h1>
+          <p class="lead">Modern, minimalist lessons designed to take you from zero to job-ready, one step at a time.</p>
+          <div class="hero-actions">
+            <a href="auth/register.html" class="btn btn-primary btn-lg">Create free account</a>
+            <a href="student/course-list.html" class="btn btn-ghost btn-lg">Browse courses</a>
+          </div>
+          <ul class="hero-points">
+            <li><i class="fa-solid fa-certificate text-primary"></i> Structured paths</li>
+            <li><i class="fa-solid fa-code text-primary"></i> In-browser code runner</li>
+            <li><i class="fa-solid fa-check text-success"></i> Track your progress</li>
+          </ul>
+        </div>
+        <div class="hero-visual card card-elevated">
+          <div class="code-sim">
+            <div class="code-sim-header">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="filename">intro.js</span>
+            </div>
+            <pre class="code-sim-body"><code>// Welcome to LearnCode
+const greet = (name) => `Hello, ${name}!`
+console.log(greet('World'))</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container features-grid">
+        <div class="feature card">
+          <i class="fa-solid fa-route feature-icon"></i>
+          <h3>Guided learning</h3>
+          <p>Step-by-step tutorials with clear explanations and hands-on exercises.</p>
+        </div>
+        <div class="feature card">
+          <i class="fa-solid fa-graduation-cap feature-icon"></i>
+          <h3>Quizzes & materials</h3>
+          <p>Reinforce concepts with quizzes and downloadable references.</p>
+        </div>
+        <div class="feature card">
+          <i class="fa-solid fa-chart-line feature-icon"></i>
+          <h3>Progress tracking</h3>
+          <p>Visualize your growth with course and quiz stats.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-inner">
+        <h2>Ready to start?</h2>
+        <p>Join thousands of learners leveling up their coding skills.</p>
+        <a href="auth/register.html" class="btn btn-primary btn-lg">Sign up</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="/" class="brand">
+          <img src="assets/images/logo.png" alt="LearnCode Logo" class="logo" />
+          <span class="brand-name">LearnCode</span>
+        </a>
+        <p class="text-muted">Minimalist EdTech platform for modern learners.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul class="list-plain">
+          <li><a href="student/course-list.html">Courses</a></li>
+          <li><a href="student/forum.html">Forum</a></li>
+          <li><a href="auth/login.html">Login</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul class="list-plain">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p class="text-muted">© 2025 LearnCode. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

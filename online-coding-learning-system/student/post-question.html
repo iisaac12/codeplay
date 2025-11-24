@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post Question — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <!-- Header sama persis -->
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="course-list.html" class="nav-link">Courses</a>
+        <a href="materials.html" class="nav-link">Materials</a>
+        <a href="progress.html" class="nav-link">Progress</a>
+        <a href="forum.html" class="nav-link active">Forum</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Form post question -->
+  <main class="container">
+    <section class="card card-elevated">
+      <h2>Post a new question</h2>
+      <p class="text-muted">Describe your issue clearly. Include code snippets or layout examples if needed.</p>
+
+      <form id="postForm" class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" class="input" placeholder="e.g. How do closures work in JS?" required />
+
+        <label for="tag">Main Tag</label>
+        <select id="tag" class="input" required>
+          <option value="">Select a tag</option>
+          <option value="javascript">javascript</option>
+          <option value="css">css</option>
+          <option value="html">html</option>
+          <option value="beginner">beginner</option>
+        </select>
+
+        <label for="extraTags">Extra Tags (optional)</label>
+        <input type="text" id="extraTags" class="input" placeholder="e.g. async, layout, flexbox" />
+
+        <label for="content">Question Details</label>
+        <textarea id="content" class="input" rows="6" placeholder="Explain your question, what you've tried, and what you expect..." required></textarea>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Question</button>
+          <a href="forum.html" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="../assets/js/validation.js"></script>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post Question — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <!-- Header sama persis -->
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="course-list.html" class="nav-link">Courses</a>
+        <a href="materials.html" class="nav-link">Materials</a>
+        <a href="progress.html" class="nav-link">Progress</a>
+        <a href="forum.html" class="nav-link active">Forum</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Form post question -->
+  <main class="container">
+    <section class="card card-elevated">
+      <h2>Post a new question</h2>
+      <p class="text-muted">Describe your issue clearly. Include code snippets or layout examples if needed.</p>
+
+      <form id="postForm" class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" class="input" placeholder="e.g. How do closures work in JS?" required />
+
+        <label for="tag">Main Tag</label>
+        <select id="tag" class="input" required>
+          <option value="">Select a tag</option>
+          <option value="javascript">javascript</option>
+          <option value="css">css</option>
+          <option value="html">html</option>
+          <option value="beginner">beginner</option>
+        </select>
+
+        <label for="extraTags">Extra Tags (optional)</label>
+        <input type="text" id="extraTags" class="input" placeholder="e.g. async, layout, flexbox" />
+
+        <label for="content">Question Details</label>
+        <textarea id="content" class="input" rows="6" placeholder="Explain your question, what you've tried, and what you expect..." required></textarea>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Question</button>
+          <a href="forum.html" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="../assets/js/validation.js"></script>
+  <script>
+   document.getElementById('postForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const title = document.getElementById('title').value.trim();
+  const tag = document.getElementById('tag').value;
+  const content = document.getElementById('content').value.trim();
+
+  if (!title || !tag || !content) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  const question = {
+    title,
+    tag,
+    content,
+    author: "You",
+    time: "just now"
+  };
+
+  const existing = JSON.parse(localStorage.getItem("forumPosts") || "[]");
+  existing.unshift(question);
+  localStorage.setItem("forumPosts", JSON.stringify(existing));
+
+  window.location.href = "forum.html";
+});
+
+  </script>
+</body>
+</html>
+
+</body>
+</html>

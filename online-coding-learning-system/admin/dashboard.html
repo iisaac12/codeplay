@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="../student/course-list.html" class="nav-link">Courses</a>
+        <a href="../student/forum.html" class="nav-link">Forum</a>
+      </nav>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/40?img=20" alt="Profile" class="avatar" />
+        <div class="profile-info">
+          <span class="name">Admin</span>
+          <span class="role text-muted">Administrator</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container admin-grid">
+    <section class="card">
+      <div class="card-header">
+        <h2 class="h4">Users</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alex Doe</td>
+              <td>alex@example.com</td>
+              <td><span class="tag success">Verified</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost">Disable</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Rina Wardana</td>
+              <td>rina@example.com</td>
+              <td><span class="tag">Unverified</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost">Verify</button>
+                <button class="btn btn-ghost text-danger">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2 class="h4">Courses</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Mentor</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>HTML & CSS Essentials</td>
+              <td>Maya</td>
+              <td><span class="tag">Pending</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost">Verify</button>
+                <button class="btn btn-ghost text-danger">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>JavaScript Fundamentals</td>
+              <td>Rafi</td>
+              <td><span class="tag success">Verified</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost text-danger">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

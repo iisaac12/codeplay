@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mentor Dashboard — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="../student/course-list.html" class="nav-link">Courses</a>
+        <a href="../student/forum.html" class="nav-link">Forum</a>
+      </nav>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/40?img=12" alt="Profile" class="avatar" />
+        <div class="profile-info">
+          <span class="name">Mentor Maya</span>
+          <span class="role text-muted">Mentor</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-header">
+        <h1 class="h3">Manage videos</h1>
+        <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add video</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Intro to Flexbox</td>
+              <td><span class="tag">Published</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn btn-ghost text-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>CSS Grid Layout</td>
+              <td><span class="tag">Draft</span></td>
+              <td class="text-right">
+                <button class="btn btn-ghost"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn btn-ghost text-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

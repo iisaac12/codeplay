@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tutorial — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="../index.html" class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="course-list.html" class="nav-link">Courses</a>
+        <a href="progress.html" class="nav-link">Progress</a>
+        <a href="forum.html" class="nav-link">Forum</a>
+      </nav>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/40?img=5" alt="Profile" class="avatar" />
+        <div class="profile-info">
+          <span class="name">Alex</span>
+          <span class="role text-muted">Student</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="lesson-progress">
+      <div class="container">
+        <div class="progress-bar large"><span class="progress" style="width: 30%"></span></div>
+        <span class="progress-label">Lesson 3 of 10 · 30% complete</span>
+      </div>
+    </div>
+
+    <section class="container tutorial-split">
+      <aside class="tutorial-left card">
+        <h2 class="h4">Step-by-step instructions</h2>
+        <ol class="step-list">
+          <li>
+            <h4 class="step-title">Declare a function</h4>
+            <p class="text-muted">Create a function named <code>sum</code> that takes two parameters and returns their sum.</p>
+          </li>
+          <li>
+            <h4 class="step-title">Log the result</h4>
+            <p class="text-muted">Call the function with <code>3</code> and <code>5</code> and print the result.</p>
+          </li>
+        </ol>
+        <div class="tutorial-nav">
+          <button class="btn btn-ghost"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+          <button class="btn btn-primary">Next <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </aside>
+
+      <section class="tutorial-right card card-elevated">
+        <div class="editor-sim">
+          <div class="editor-header">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="filename">exercise.js</span>
+          </div>
+          <textarea class="editor-area" spellcheck="false">// Write your code here
+function sum(a, b) {
+  return a + b
+}
+
+console.log(sum(3, 5))</textarea>
+        </div>
+        <div class="editor-actions">
+          <button class="btn btn-primary"><i class="fa-solid fa-play"></i> Run code</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

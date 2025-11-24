@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz — LearnCode</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="quiz-header">
+    <div class="container quiz-header-inner">
+      <div class="brand">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </div>
+      <div class="timer" id="timer">02:00</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card card-elevated quiz-card">
+      <h1 class="h3">Quiz: JavaScript Basics</h1>
+      <p class="question">Which keyword is used to declare a variable that can be reassigned?</p>
+
+      <form id="quizForm">
+        <label class="option-card">
+          <input type="radio" name="q1" value="const" />
+          <span class="option-content">const</span>
+        </label>
+        <label class="option-card">
+          <input type="radio" name="q1" value="let" />
+          <span class="option-content">let</span>
+        </label>
+        <label class="option-card">
+          <input type="radio" name="q1" value="var" />
+          <span class="option-content">var</span>
+        </label>
+
+        <div class="quiz-actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="modal" id="resultModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="resultTitle">Result</h3>
+          <button class="modal-close" data-close>&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="resultMessage">Your score is ...</p>
+        </div>
+        <div class="modal-footer">
+          <a href="course-list.html" class="btn btn-outline">Back to courses</a>
+          <a href="tutorial.html" class="btn btn-primary">Review lesson</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Simple timer
+    let time = 120;
+    const timerEl = document.getElementById('timer');
+    const interval = setInterval(() => {
+      time--;
+      const m = String(Math.floor(time / 60)).padStart(2, '0');
+      const s = String(time % 60).padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+      if (time <= 0) clearInterval(interval);
+    }, 1000);
+
+    // Quiz logic and modal
+    const form = document.getElementById('quizForm');
+    const modal = document.getElementById('resultModal');
+    const title = document.getElementById('resultTitle');
+    const msg = document.getElementById('resultMessage');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = new FormData(form).get('q1');
+      const score = value === 'let' ? 100 : value === 'var' ? 60 : 0; // simulate scoring
+      const passed = score >= 70;
+      title.textContent = passed ? 'Pass' : 'Fail';
+      msg.textContent = `Your score: ${score}. ${passed ? 'Great job!' : 'Review the lesson and try again.'}`;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+
+    document.querySelector('[data-close]').addEventListener('click', () => {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    });
+  </script>
+</body>
+</html>
