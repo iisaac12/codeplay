@@ -1,0 +1,129 @@
+<?php
+
+// ============================================
+// app/Http/Controllers/AuthController.php
+// ============================================
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\EmailVerification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+class AuthController extends Controller
+{
+    // Tampilkan form registrasi
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    // Proses registrasi
+    public function register(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:users|max:50',
+            'email' => 'required|email|unique:users|max:100',
+            'password' => 'required|min:6|confirmed',
+            'full_name' => 'required|max:100',
+            'role' => 'required|in:pelajar,mentor'
+        ]);
+
+        // Buat user baru
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password_hash' => Hash::make($request->password),
+            'full_name' => $request->full_name,
+            'role' => $request->role,
+            'is_verified' => false,
+            'is_active' => true
+        ]);
+
+        // Buat token verifikasi
+        $token = Str::random(64);
+        EmailVerification::create([
+            'user_id' => $user->user_id,
+            'token' => $token,
+            'expires_at' => Carbon::now()->addHours(24)
+        ]);
+
+        // TODO: Kirim email verifikasi
+        // Mail::to($user->email)->send(new VerificationEmail($token));
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
+    }
+
+    // Tampilkan form login
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    // Proses login
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password_hash)) {
+            return back()->withErrors(['email' => 'Email atau password salah']);
+        }
+
+        if (!$user->is_verified) {
+            return back()->withErrors(['email' => 'Email belum diverifikasi']);
+        }
+
+        if (!$user->is_active) {
+            return back()->withErrors(['email' => 'Akun Anda tidak aktif']);
+        }
+
+        Auth::login($user);
+
+        // Redirect berdasarkan role
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isMentor()) {
+            return redirect()->route('mentor.dashboard');
+        } else {
+            return redirect()->route('dashboard');
+        }
+    }
+
+    // Verifikasi email
+    public function verifyEmail($token)
+    {
+        $verification = EmailVerification::where('token', $token)
+            ->where('is_used', false)
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if (!$verification) {
+            return redirect()->route('login')->withErrors(['error' => 'Token tidak valid atau sudah kadaluarsa']);
+        }
+
+        $user = $verification->user;
+        $user->is_verified = true;
+        $user->save();
+
+        $verification->is_used = true;
+        $verification->save();
+
+        return redirect()->route('login')->with('success', 'Email berhasil diverifikasi! Silakan login.');
+    }
+
+    // Logout
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
+    }
+}
