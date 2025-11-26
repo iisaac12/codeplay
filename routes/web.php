@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', function () {
+       return view('welcome');
+   });
     
     // Courses
     Route::get('/course/{slug}', [CourseController::class, 'show'])->name('course.show');
