@@ -47,16 +47,10 @@ class AuthController extends Controller
         ]);
 
         // Buat token verifikasi
-        $token = Str::random(64);
-        EmailVerification::create([
-            'user_id' => $user->user_id,
-            'token' => $token,
-            'expires_at' => Carbon::now()->addHours(24)
-        ]);
+        // TODO: Kirim email verifikasi
+        // Mail::to($user->email)->send(new VerificationEmail($token));
 
-       
-        Mail::to($user->email)->send(new VerificationEmail($token));
-        return redirect()->route('verification.notice');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
     }
 
     // Tampilkan form login
@@ -79,10 +73,6 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Email atau password salah']);
         }
 
-        if (!$user->is_verified) {
-            return back()->withErrors(['email' => 'Email belum diverifikasi']);
-        }
-
         if (!$user->is_active) {
             return back()->withErrors(['email' => 'Akun Anda tidak aktif']);
         }
@@ -98,38 +88,6 @@ class AuthController extends Controller
             return redirect()->route('dashboard.user');
         }
     }
-
-    // Verifikasi email
-    public function verifyEmail($token)
-    {
-        $verification = EmailVerification::where('token', $token)
-            ->where('is_used', false)
-            ->where('expires_at', '>', Carbon::now())
-            ->first();
-
-        if (!$verification) {
-            return redirect()->route('login')->withErrors(['error' => 'Token tidak valid atau sudah kadaluarsa']);
-        }
-
-        $user = $verification->user;
-        $user->is_verified = true;
-        $user->save();
-
-        $verification->is_used = true;
-        $verification->save();
-
-        return redirect()->route('login')->with('success', 'Email berhasil diverifikasi! Silakan login.');
-    }
-
-    // Menampilkan halaman notifikasi verifikasi
-    public function showVerifyNotice()
-    {
-        // KARENA FILE KAMU NAMANYA verification.blade.php DI FOLDER auth
-        return view('auth.verification'); 
-    }
-
-
-
     // Logout
     public function logout()
     {
