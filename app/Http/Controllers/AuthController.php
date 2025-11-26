@@ -44,9 +44,6 @@ class AuthController extends Controller
             'is_active' => true
         ]);
 
-        // Buat token verifikasi
-        // TODO: Kirim email verifikasi
-        // Mail::to($user->email)->send(new VerificationEmail($token));
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
     }
