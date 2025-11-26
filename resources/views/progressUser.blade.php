@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Progress — LearnCode</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+  <header class="app-header">
+    <div class="container app-header-inner">
+           <a href="{{ route('dashboard.user') }}">
+        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
+        <span class="brand-name">LearnCode</span>
+      </a>
+      <nav class="app-nav">
+        <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
+        <a href="{{ route('materials.index') }}" class="nav-link">Materials</a>
+        <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
+         <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>
+
+    </nav>
+      <div class="profile">
+        <img src="https://i.pravatar.cc/40?img=5" alt="Profile" class="avatar" />
+        <div class="profile-info">
+          <span class="name">Alex</span>
+          <span class="role text-muted">Student</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats-grid">
+      <div class="card stat-card">
+        <h3>Courses completed</h3>
+        <p class="stat-number">3</p>
+      </div>
+      <div class="card stat-card">
+        <h3>Average quiz score</h3>
+        <p class="stat-number">82%</p>
+      </div>
+      <div class="card stat-card">
+        <h3>Current streak</h3>
+        <p class="stat-number">7 days</p>
+      </div>
+    </section>
+
+    <section class="charts-grid">
+      <div class="card chart-card">
+        <h3>Course completion</h3>
+        <div class="pie" style="--p:75; --c:#12B76A;"></div>
+        <p class="text-muted mt-8">75% overall completion</p>
+      </div>
+      <div class="card chart-card">
+        <h3>Recent quiz scores</h3>
+        <div class="bars">
+          <span class="bar" style="height: 60%"></span>
+          <span class="bar" style="height: 80%"></span>
+          <span class="bar" style="height: 70%"></span>
+          <span class="bar" style="height: 90%"></span>
+        </div>
+      </div>
+      <div class="card chart-card illu-card">
+        <div class="illustration">
+          <i class="fa-solid fa-graduation-cap illu-icon"></i>
+          <p class="text-muted">Keep going—every step counts.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

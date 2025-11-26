@@ -22,7 +22,7 @@ class ForumController extends Controller
                         ->orderBy('updated_at', 'desc')
                         ->paginate(20);
 
-        return view('forum.index', compact('threads', 'courseId'));
+        return view('forumUser', compact('threads', 'courseId'));
     }
 
     // Create thread

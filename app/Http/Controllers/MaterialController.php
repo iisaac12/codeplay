@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class MaterialController extends Controller
 {
+
+    // Menampilkan daftar semua materi
+    public function index()
+    {
+        // Ambil data materi, kita eager load 'course' agar efisien
+        // paginate(10) artinya memunculkan 10 materi per halaman
+        $materials = CourseMaterial::with('course')->latest()->paginate(10);
+
+        // Pastikan kamu nanti membuat file view di: resources/views/materials/index.blade.php
+        return view('materialUser', compact('materials'));
+    }
+    
     // Tampilkan materi
     public function show($materialId)
     {

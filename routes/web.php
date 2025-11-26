@@ -33,6 +33,7 @@
         Route::get('/course/{slug}/learn', [CourseController::class, 'learn'])->name('course.learn');
         
         // Materials
+        Route::get('/materials', [MaterialController::class, 'index'])->name('materials.index');
         Route::get('/material/{id}', [MaterialController::class, 'show'])->name('material.show');
         Route::post('/material/{id}/progress', [MaterialController::class, 'updateProgress'])->name('material.progress');
         Route::get('/material/{id}/download', [MaterialController::class, 'download'])->name('material.download');
@@ -66,7 +67,7 @@
             Route::post('/course/{id}/material', [MentorController::class, 'storeMaterial'])->name('material.store');
             
             // Mentor Forum
-            Route::get('/forum', [MentorController::class, 'forumIndex'])->name('forum.index');
+            Route::get('/forum', [MentorController::class, 'forumIndex'])->name('forumUser');
             Route::get('/forum/create', [MentorController::class, 'forumCreate'])->name('forum.create');
             Route::post('/forum', [MentorController::class, 'forumStore'])->name('forum.store');
             Route::get('/forum/{id}', [MentorController::class, 'forumShow'])->name('forum.show');

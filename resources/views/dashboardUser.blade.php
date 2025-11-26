@@ -18,11 +18,12 @@
         <span class="brand-name">LearnCode</span>
       </a>
       <nav class="app-nav">
-        <a href="course-list.html" class="nav-link active">Courses</a>
-        <a href="materials.html" class="nav-link">Materials</a>
-        <a href="progress.html" class="nav-link">Progress</a>
-        <a href="forum.html" class="nav-link">Forum</a>
-      </nav>
+        <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
+        <a href="{{ route('materials.index') }}" class="nav-link">Materials</a>
+        <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
+         <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>
+
+    </nav>
       <div class="profile">
         <img src="https://i.pravatar.cc/40?img=5" alt="Profile" class="avatar" />
         <div class="profile-info">

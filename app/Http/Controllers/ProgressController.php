@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProgressController extends Controller
 {
+
     public function index()
     {
         $enrollments = UserEnrollment::where('user_id', Auth::id())
@@ -26,7 +27,7 @@ class ProgressController extends Controller
             ->where('is_completed', true)
             ->count();
 
-        return view('progress.index', compact(
+        return view('progressUser', compact(
             'enrollments',
             'totalQuizzes',
             'passedQuizzes',
