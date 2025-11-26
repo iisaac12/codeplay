@@ -12,43 +12,87 @@
 <body class="bg-light">
   <main class="auth-split">
     <section class="auth-form card card-elevated">
-      <a href="../index.html" class="brand mb-24">
-        <img src="../assets/images/logo.png" alt="LearnCode Logo" class="logo" />
+      <a href="{{ url('/') }}" class="brand mb-24">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="LearnCode Logo" class="logo" />
         <span class="brand-name">LearnCode</span>
       </a>
       <h1 class="h2">Create your account</h1>
       <p class="text-muted mb-24">Start learning to code today.</p>
-      <form id="registerForm" novalidate>
+
+      {{-- Tampilkan Error Validasi --}}
+      @if($errors->any())
+        <div class="alert alert-danger" style="color: red; margin-bottom: 15px;">
+            <ul style="padding-left: 20px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+      @endif
+
+      {{-- FORM ACTION & METHOD --}}
+      <form action="{{ route('register') }}" method="POST">
+        @csrf {{-- WAJIB: Token Keamanan --}}
+
+        {{-- 1. Full Name --}}
         <div class="form-control">
-          <label for="name">Name</label>
+          <label for="full_name">Full Name</label>
           <div class="input-with-icon">
             <i class="fa-solid fa-user input-icon"></i>
-            <input type="text" id="name" name="name" placeholder="Your full name" required />
+            {{-- name harus "full_name" sesuai controller --}}
+            <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}" placeholder="Your full name" required />
           </div>
-          <small class="error-msg" data-error-for="name"></small>
         </div>
+
+        {{-- 2. Username (Tadi belum ada) --}}
+        <div class="form-control">
+            <label for="username">Username</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-at input-icon"></i>
+              <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Choose a username" required />
+            </div>
+        </div>
+
+        {{-- 3. Email --}}
         <div class="form-control">
           <label for="email">Email</label>
           <div class="input-with-icon">
             <i class="fa-solid fa-envelope input-icon"></i>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="you@example.com" required />
           </div>
-          <small class="error-msg" data-error-for="email"></small>
         </div>
+
+        {{-- 4. Password --}}
         <div class="form-control">
           <label for="password">Password</label>
           <div class="input-with-icon">
             <i class="fa-solid fa-lock input-icon"></i>
             <input type="password" id="password" name="password" placeholder="8+ characters" required minlength="8" />
           </div>
-          <small class="error-msg" data-error-for="password"></small>
         </div>
+
+        {{-- 5. Confirm Password (WAJIB karena controller pakai rule 'confirmed') --}}
+        <div class="form-control">
+            <label for="password_confirmation">Confirm Password</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-check-double input-icon"></i>
+              <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Repeat password" required />
+            </div>
+        </div>
+
+        {{-- 6. Role (Hidden atau Select) --}}
+        {{-- Kita set default 'pelajar' biar user ga bingung --}}
+        <input type="hidden" name="role" value="pelajar">
+
         <button type="submit" class="btn btn-primary w-100">Register</button>
+        
         <div class="form-foot">
-          <p class="text-muted">Already have an account? <a href="login.html">Log in</a></p>
+          <p class="text-muted">Already have an account? <a href="{{ route('login') }}">Log in</a></p>
         </div>
       </form>
     </section>
+
+    {{-- Bagian Gambar --}}
     <section class="auth-visual">
       <div class="illustration card card-elevated">
         <i class="fa-solid fa-laptop-code illu-icon"></i>
@@ -58,6 +102,8 @@
     </section>
   </main>
 
-  <script src="../assets/js/validation.js"></script>
+  {{-- Matikan JS validation biar Laravel yang kerja --}}
+  {{-- <script src="{{ asset('assets/js/validation.js') }}"></script> --}}
+
 </body>
 </html>

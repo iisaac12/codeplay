@@ -17,9 +17,10 @@
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email');
+    Route::get('/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verification');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/email/verify-sent', [AuthController::class, 'showVerifyNotice'])->name('verification.notice');
     // Protected Routes
     //Route::middleware('auth')->group(function () {
         

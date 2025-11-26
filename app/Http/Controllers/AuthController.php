@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;  
+use App\Mail\VerificationEmail;
 
 class AuthController extends Controller
 {
@@ -52,10 +54,9 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addHours(24)
         ]);
 
-        // TODO: Kirim email verifikasi
-        // Mail::to($user->email)->send(new VerificationEmail($token));
-
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
+       
+        Mail::to($user->email)->send(new VerificationEmail($token));
+        return redirect()->route('verification.notice');
     }
 
     // Tampilkan form login
@@ -94,7 +95,7 @@ class AuthController extends Controller
         } elseif ($user->isMentor()) {
             return redirect()->route('mentor.dashboard');
         } else {
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard.user');
         }
     }
 
@@ -119,6 +120,15 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Email berhasil diverifikasi! Silakan login.');
     }
+
+    // Menampilkan halaman notifikasi verifikasi
+    public function showVerifyNotice()
+    {
+        // KARENA FILE KAMU NAMANYA verification.blade.php DI FOLDER auth
+        return view('auth.verification'); 
+    }
+
+
 
     // Logout
     public function logout()
