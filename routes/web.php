@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/verifications', [AdminController::class, 'pendingVerifications'])->name('verifications');
         Route::post('/user/{id}/verify', [AdminController::class, 'verifyUser'])->name('user.verify');
-        Route::post('/course/{id}/verify', [AdminController::class, 'verifyCourse'])->name('course.verify');
+        Route::post('/course/{id}/verify', [AdminController::class, 'verifyCourse'])->name('course.verify');       Route::delete('/user/{id}/delete', [AdminController::class, 'deleteUser'])->name('user.delete');    
+        Route::delete('/course/{id}/delete', [AdminController::class, 'deleteCourse'])->name('course.delete');
     });
 });

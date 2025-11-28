@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - CodePlay</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
     <!-- Header -->
@@ -160,15 +158,21 @@
                                         @if(!$user->is_verified)
                                             <form action="{{ route('admin.user.verify', $user->user_id) }}" method="POST" style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--success); color: var(--white); border: none;">
-                                                    Verifikasi
+                                                <form action="{{ route('admin.user.verify', ['id' => $user->user_id]) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin memverifikasi user ini?');">
+                                                        @csrf
+                                        <button type="submit" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--success); color: var(--white); border: none;">
+                                                Verifikasi
                                                 </button>
+                                                    </form>
                                             </form>
                                         @endif
                                         
                                         @if($user->is_active && $user->user_id !== auth()->id())
-                                            <button class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--danger); color: var(--white); border: none;" onclick="confirmDelete('user', {{ $user->user_id }}, '{{ $user->full_name }}')">
+                                    <button class="btn" 
+                                        style="padding: 6px 12px; font-size: 12px; background: var(--danger); color: var(--white); border: none;" 
+                                            onclick="confirmDelete('{{ route('admin.user.delete', $user->user_id) }}', '{{ $user->full_name }}')">
                                                 Delete
+                                                    </button>                                                
                                             </button>
                                         @endif
                                     </td>
@@ -235,14 +239,19 @@
                                         @if(!$course->is_verified)
                                             <form action="{{ route('admin.course.verify', $course->course_id) }}" method="POST" style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--success); color: var(--white); border: none;">
-                                                    Verifikasi
-                                                </button>
+                                                <form action="{{ route('admin.course.verify', ['id' => $course->course_id]) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin memverifikasi kursus ini?');">
+                                                    @csrf
+                                                    <button type="submit" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--success); color: var(--white); border: none;">
+                                                        Verifikasi
+                                                    </button>
+                                                </form>
                                             </form>
                                         @endif
                                         
-                                        <button class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--danger); color: var(--white); border: none;" onclick="confirmDelete('course', {{ $course->course_id }}, '{{ $course->title }}')">
-                                            Delete
+                                        <button class="btn" 
+                                                style="padding: 6px 12px; font-size: 12px; background: var(--danger); color: var(--white); border: none;" 
+                                                    onclick="confirmDelete('{{ route('admin.user.delete', $user->user_id) }}', '{{ $user->full_name }}')">
+                                                        Delete
                                         </button>
                                     </td>
                                 </tr>
@@ -332,21 +341,17 @@
         });
 
         // Confirmation Modal
-        function confirmDelete(type, id, name) {
-            const modal = document.getElementById('confirmModal');
-            const itemName = document.getElementById('itemName');
-            const deleteForm = document.getElementById('deleteForm');
-            
-            itemName.textContent = name;
-            
-            if (type === 'user') {
-                deleteForm.action = `/admin/users/${id}`;
-            } else if (type === 'course') {
-                deleteForm.action = `/admin/courses/${id}`;
-            }
-            
-            modal.classList.add('open');
-        }
+        function confirmDelete(url, name) {
+    const modal = document.getElementById('confirmModal');
+    const itemName = document.getElementById('itemName');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    itemName.textContent = name;
+    
+    deleteForm.action = url;
+    
+    modal.classList.add('open');
+}
 
         function closeModal() {
             document.getElementById('confirmModal').classList.remove('open');
