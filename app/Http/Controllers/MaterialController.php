@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseMaterial;
 use App\Models\MaterialProgress;
 use App\Models\UserEnrollment;
@@ -24,15 +25,22 @@ class MaterialController extends Controller
     // Tampilkan materi
     public function show($materialId)
     {
-        $material = CourseMaterial::with('course')->findOrFail($materialId);
+        $material = CourseMaterial::where('material_id', $materialId)->firstOrFail();
 
+        $course = $material->course;
+
+        $course->load(['materials', 'tutorials', 'quizzes']);
+
+        $enrollment = UserEnrollment::where('user_id', Auth::id())
+            ->where('course_id', $course->course_id)
+            ->firstOrFail();
         // Get or create progress
         $progress = MaterialProgress::firstOrCreate([
             'user_id' => Auth::id(),
             'material_id' => $materialId
         ]);
 
-        return view('materials.show', compact('material', 'progress'));
+        return view('materials.show', compact('material', 'course', 'enrollment', 'progress'));
     }
 
     // Update progress materi

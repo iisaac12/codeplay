@@ -108,10 +108,10 @@
             <div class="mb-24">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
                     <span class="text-muted">Course Progress</span>
-                    <strong>{{ $enrollment->progress_percentage }}%</strong>
+                    <strong> {{ $enrollment->progress_percentage }}%</strong>
                 </div>
                 <div class="progress-bar">
-                    <span class="progress" {{ $enrollment->progress_percentage }} ></span>
+                    <span class="progress" style="width: {{ $enrollment->progress_percentage }}%"></span>
                 </div>
             </div>
 

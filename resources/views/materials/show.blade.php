@@ -1,116 +1,144 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materi Pembelajaran — CodePlay</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ $material->title }} — {{ $course->title }}</title>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* Style sama persis dengan learn.blade.php */
+    .learn-grid { display: grid; grid-template-columns: 350px 1fr; gap: 24px; margin-top: 24px; align-items: start; }
+    .curriculum-card { max-height: calc(100vh - 100px); overflow-y: auto; position: sticky; top: 24px; }
+    .lesson-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid transparent; margin-bottom: 4px; }
+    .lesson-item:hover { background-color: #F9FAFB; }
+    .lesson-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #EEF2F6; border-radius: 6px; color: var(--text-muted); font-size: 14px; }
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <style> body { font-family: 'Inter', sans-serif; } </style>
+    /* Highlight materi yang sedang dibuka */
+    .lesson-item.active { background-color: #EFF6FF; border-color: #0056D2; }
+    .lesson-item.active .lesson-icon { background-color: #0056D2; color: white; }
+
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; }
+    .video-wrapper iframe, .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    
+    @media (max-width: 900px) { .learn-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
-<body class="bg-white text-gray-800">
+<body class="bg-light">
 
-    {{-- HEADER NAVIGASI --}}
-    <div class="border-b border-gray-200 sticky top-0 bg-white z-10">
-        <div class="container mx-auto px-6 py-4 flex items-center gap-4 text-gray-600">
-            <a href="{{ route('dashboard.user') }}" class="hover:text-blue-600 transition">
-                <i class="fa-solid fa-arrow-left text-xl"></i>
-            </a>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
-                    <i class="fa-solid fa-pencil text-sm"></i>
-                </div>
-                <span class="font-semibold text-gray-900">Materi Pembelajaran</span>
-            </div>
-        </div>
+  {{-- HEADER --}}
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a href="{{ route('user.dashboard') }}" class="brand">
+        <img src="{{ asset('assets/images/logo.svg') }}" class="logo" style="width:40px;">
+        <span class="brand-name">CodePlay</span>
+      </a>
+      <div class="nav">
+        {{-- Tombol kembali ke halaman depan course --}}
+        <a href="{{ route('course.learn', $course->slug) }}" class="btn btn-ghost btn-sm">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Course Home
+        </a>
+      </div>
     </div>
+  </header>
 
-    <main class="container mx-auto px-6 py-8">
-        
-        {{-- JUDUL HALAMAN --}}
-        {{-- Karena di controller kamu mengambil semua materi (mixed), kita beri judul umum --}}
-        {{-- Tapi kalau kamu mau ambil nama Course dari materi pertama, bisa pakai logika di bawah --}}
-        <div class="mb-10">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                {{-- Cara ambil judul course (jika ada datanya) --}}
-                {{ $materials->first()->course->title ?? 'Daftar Semua Materi' }}
-            </h1>
-            <p class="text-gray-500 text-lg">
-                Unduh materi pembelajaran untuk dipelajari secara offline.
-            </p>
-        </div>
+  <main class="container mb-24">
+    <div class="learn-grid">
 
-        {{-- GRID SYSTEM (LOOPING DATA) --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {{-- SIDEBAR (Sama dengan learn.blade.php) --}}
+        <aside class="curriculum-card card card-elevated">
+            <h3 class="h3 mb-16">Curriculum</h3>
+            
+            {{-- Loop Materi --}}
+            <div class="module-title"><i class="fa-solid fa-book me-2"></i> Materials</div>
+            @foreach($course->materials as $item)
+                <a href="{{ route('materials.show', $item->material_id) }}" 
+                   class="lesson-item {{ $item->material_id == $material->material_id ? 'active' : '' }}">
+                    <div class="lesson-icon">
+                        @if($item->type == 'video') <i class="fa-solid fa-play"></i>
+                        @elseif($item->type == 'pdf') <i class="fa-regular fa-file-pdf"></i>
+                        @else <i class="fa-regular fa-file-lines"></i> @endif
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 14px; font-weight: 500;">{{ $item->title }}</div>
+                        <small class="text-muted">{{ $item->duration ? $item->duration . ' min' : 'Read' }}</small>
+                    </div>
+                    @if($item->material_id == $material->material_id)
+                        <i class="fa-solid fa-circle-play text-primary"></i>
+                    @endif
+                </a>
+            @endforeach
+            
+            {{-- Loop Tutorial & Quiz (Opsional, copy dari learn.blade.php jika mau lengkap) --}}
+        </aside>
 
-            {{-- MULAI LOOPING DATABASE --}}
-            @forelse($materials as $material)
+        {{-- AREA KONTEN UTAMA --}}
+        <section class="content-area">
+            <div class="card card-elevated p-0 overflow-hidden">
                 
-                <div class="border border-gray-200 rounded-2xl p-6 flex gap-5 shadow-sm hover:shadow-md transition bg-white items-start">
-                    
-                    {{-- LOGIKA ICON: Beda icon kalau PDF atau Video (Optional) --}}
-                    <div class="w-12 h-12 rounded-xl border border-gray-300 flex items-center justify-center flex-shrink-0 
-                        {{ Str::contains(strtolower($material->title), 'video') ? 'bg-blue-50 border-blue-200 text-blue-500' : 'text-gray-600' }}">
-                        
-                        @if(Str::contains(strtolower($material->title), 'video'))
-                            <i class="fa-solid fa-video text-xl"></i>
+                {{-- LOGIKA TAMPILAN KONTEN BERDASARKAN TIPE --}}
+                
+                {{-- 1. JIKA VIDEO --}}
+                @if($material->type == 'video')
+                    <div class="video-wrapper">
+                        {{-- Cek apakah file lokal atau link youtube --}}
+                        @if(Str::contains($material->file_url, ['youtube.com', 'youtu.be']))
+                            <iframe src="{{ $material->file_url }}" allowfullscreen></iframe>
                         @else
-                            <i class="fa-regular fa-file-lines text-xl"></i>
+                            {{-- Video Lokal (Storage) --}}
+                            <video controls>
+                                <source src="{{ asset('storage/' . $material->file_url) }}" type="video/mp4">
+                                Browser Anda tidak mendukung video.
+                            </video>
                         @endif
                     </div>
+                
+                {{-- 2. JIKA PDF --}}
+                @elseif($material->type == 'pdf')
+                    <div style="height: 800px;">
+                        <iframe src="{{ asset('storage/' . $material->file_url) }}" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
 
-                    <div class="flex-1">
-                        {{-- 1. JUDUL MATERI DARI DB --}}
-                        <h3 class="font-bold text-lg text-gray-900 line-clamp-1" title="{{ $material->title }}">
-                            {{ $material->title }}
-                        </h3>
-
-                        {{-- 2. NAMA COURSE (Biar tau ini materi mapel apa) --}}
-                        <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded mt-1 inline-block">
-                            {{ $material->course->title ?? 'Umum' }}
-                        </span>
-
-                        {{-- 3. DESKRIPSI DARI DB --}}
-                        <p class="text-gray-500 text-sm mt-2 leading-relaxed line-clamp-2">
-                            {{ $material->description ?? 'Tidak ada deskripsi tambahan untuk materi ini.' }}
-                        </p>
+                {{-- 3. JIKA TEXT / ARTIKEL --}}
+                @else
+                    <div class="p-5">
+                        {{-- Menampilkan Gambar Cover jika ada --}}
+                        @if($material->file_url && !Str::endsWith($material->file_url, '.pdf'))
+                            <img src="{{ asset('storage/' . $material->file_url) }}" class="w-100 rounded mb-4">
+                        @endif
                         
-                        <div class="flex items-center justify-between mt-4">
-                            {{-- Ukuran File (Kalau tidak ada di DB, kita hide atau kasih random) --}}
-                            <span class="text-gray-400 text-sm">
-                                <i class="fa-solid fa-download"></i> File
-                            </span>
-
-                            {{-- 4. TOMBOL DOWNLOAD (Route ke Controller) --}}
-                            <a href="{{ route('material.download', $material->id) }}" 
-                               class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2 px-4 rounded-full flex items-center gap-2 transition no-underline">
-                                <i class="fa-regular fa-file-pdf"></i> Unduh
-                            </a>
+                        <div class="typography" style="line-height: 1.8; color: #374151;">
+                            {!! $material->content !!} {{-- Render HTML dari database --}}
                         </div>
                     </div>
-                </div>
+                @endif
 
-            @empty
-                {{-- TAMPILAN JIKA KOSONG --}}
-                <div class="col-span-full text-center py-10">
-                    <div class="inline-block p-4 rounded-full bg-gray-100 mb-3">
-                        <i class="fa-solid fa-folder-open text-gray-400 text-4xl"></i>
+                {{-- BAGIAN BAWAH KONTEN (JUDUL & NAVIGASI) --}}
+                <div class="p-4 border-top">
+                    <h1 class="h2">{{ $material->title }}</h1>
+                    <p class="text-muted">{{ $material->description ?? 'Pelajari materi ini dengan seksama.' }}</p>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button class="btn btn-outline">Previous Lesson</button>
+                        
+                        {{-- Tombol Mark as Complete --}}
+                        <form action="{{ route('material.progress', $material->material_id) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="completed" value="1">
+                            <button type="submit" class="btn btn-primary">
+                                Mark as Completed <i class="fa-solid fa-check ms-2"></i>
+                            </button>
+                        </form>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900">Belum ada materi</h3>
-                    <p class="text-gray-500">Silakan cek kembali nanti.</p>
                 </div>
-            @endforelse
 
-        </div>
+            </div>
+        </section>
 
-        {{-- PAGINATION (Link Halaman 1, 2, 3...) --}}
-        <div class="mt-8 flex justify-center">
-            {{ $materials->links() }}
-        </div>
-
-    </main>
+    </div>
+  </main>
 
 </body>
 </html>
