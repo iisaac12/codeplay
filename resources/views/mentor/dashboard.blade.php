@@ -107,7 +107,7 @@
         <div class="container">
             <div class="app-header-inner">
             <div class="brand">
-                <a href="{{ route('dashboard') }}" style="text-decoration: none;">
+                <a href="{{ route('mentor.dashboard') }}" style="text-decoration: none;">
                     <img src="{{ asset('assets/logo.svg') }}" alt="Logo" style="height: 40px;">
                 </a>
                 <span class="brand-name">Dashboard Mentor</span>
