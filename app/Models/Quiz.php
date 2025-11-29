@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -40,4 +41,3 @@ class Quiz extends Model
         return $this->hasMany(QuizAttempt::class, 'quiz_id', 'quiz_id');
     }
 }
-

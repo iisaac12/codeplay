@@ -20,6 +20,11 @@
     .btn-next:hover { background: #2563eb; }
     .btn-run { background: #22c55e; color: white; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-run:hover { background: #16a34a; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; opacity: 0; transition: opacity 0.3s; }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    .modal-box { background: white; border-radius: 12px; width: 90%; max-width: 600px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: translateY(20px); transition: transform 0.3s; }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .code-block { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 14px; overflow-x: auto; margin: 16px 0; border: 1px solid #334155; }
   </style>
 </head>
 <body>
@@ -27,17 +32,30 @@
   <header class="app-header" style="background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 0;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px;">
       <a href="{{ route('dashboard') }}" class="brand" style="text-decoration: none; color: #1e293b; font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px;">
-        <span>🏠 CodePlay</span>
+        <img src="{{ asset('assets/logo.svg') }}" class="logo">
+                <span class="brand-name">CodePlay</span>
+
       </a>
       <nav class="app-nav" style="display: flex; gap: 24px;">
         <span class="nav-link font-bold" style="color: #64748b;">{{ $step->tutorial->course->title ?? 'Belajar Coding' }}</span>
       </nav>
-      <div class="profile" style="display: flex; align-items: center; gap: 12px;">
-         <div style="text-align: right;">
-            <div style="font-weight: 600; font-size: 14px; color: #1e293b;">{{ Auth::user()->full_name }}</div>
-            <div style="font-size: 12px; color: #94a3b8;">Student</div>
-         </div>
-         <img src="https://ui-avatars.com/api/?name={{ Auth::user()->full_name }}&background=0D8ABC&color=fff" style="width: 40px; height: 40px; border-radius: 50%;">
+      <div class="profile">
+        <a href="{{ route('profile.show') }}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <img 
+                src="{{ $user->avatar_url ? asset('storage/' . $user->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($user->full_name ?? $user->username).'&background=3b82f6&color=fff&bold=true' }}" 
+                alt="Profile" 
+                class="avatar" 
+                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; padding: 1px;"
+            />
+            <div class="profile-info" style="text-align: right; line-height: 1.2;">
+                <span class="name" style="font-weight: 700; font-size: 14px; color: #1e293b; display: block;">
+                    {{ $user->full_name ?? $user->username }}
+                </span>
+                <span class="role text-muted" style="font-size: 11px; font-weight: 500;">
+                    {{ ucfirst($user->role) }}
+                </span>
+            </div>
+        </a>
       </div>
     </div>
   </header>
@@ -55,9 +73,20 @@
                 </div>
             </div>
             
-            <a href="#" class="btn-prev" style="text-decoration: none; padding: 10px 24px; color: #1e293b; font-weight: 600;">
-                Ambil Quiz
-            </a>
+            <!-- Logic: Cari Quiz yang berhubungan dengan Course ini -->
+            @php
+                $relatedQuiz = \App\Models\Quiz::where('course_id', $step->tutorial->course_id)->first();
+            @endphp
+
+            @if($relatedQuiz)
+                <a href="{{ route('quiz.show', $relatedQuiz->quiz_id) }}" class="btn-prev" style="text-decoration: none; padding: 10px 24px; color: #1e293b; font-weight: 600; border: 1px solid #cbd5e1; display: inline-block;">
+                    Ambil Quiz
+                </a>
+            @else
+                <button class="btn-prev" disabled style="opacity: 0.5; cursor: not-allowed; text-decoration: none; padding: 10px 24px; color: #94a3b8; font-weight: 600; border: 1px solid #e2e8f0;">
+                    Quiz Belum Tersedia
+                </button>
+            @endif
         </div>
 
         @php $percentage = ($step->step_number / $totalSteps) * 100; @endphp
@@ -130,13 +159,14 @@
                     @endif
                 </div>
 
-                <div style="text-align: center; margin-top: 16px;">
-                    <button onclick="alert('Solusi: \n{{ $step->solution_code }}')" style="background: none; border: none; color: #64748b; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: underline;">
-                        Lihat Solusi
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="openSolution()" style="background: none; border: none; color: #64748b; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; transition: background 0.2s;">
+                        <i class="fa-solid fa-eye"></i> Lihat Solusi
                     </button>
                 </div>
             </div>
         </div>
+
 
         <div style="display: flex; flex-direction: column; gap: 24px;">
             
@@ -192,6 +222,29 @@
         </div>
 
     </div>
+
+    <div id="solutionModal" class="modal-overlay">
+      <div class="modal-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0;">Kunci Jawaban</h3>
+              <button onclick="closeSolution()" style="background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer;">&times;</button>
+          </div>
+          
+          <p style="color: #64748b; font-size: 14px; margin-bottom: 16px;">
+              Gunakan kode di bawah ini sebagai referensi belajar jika Anda mengalami kesulitan.
+          </p>
+
+          <!-- Code Block Solusi -->
+          <pre class="code-block">{{ $step->solution_code }}</pre>
+
+          <div style="text-align: right; margin-top: 24px;">
+              <button onclick="closeSolution()" class="btn-prev" style="cursor: pointer;">Tutup</button>
+              <button onclick="copySolution()" class="btn-next" style="cursor: pointer; margin-left: 8px;">
+                  <i class="fa-regular fa-copy"></i> Salin Kode
+              </button>
+          </div>
+      </div>
+  </div>
   </main>
 
   <script>
@@ -205,6 +258,31 @@
         this.selectionStart = this.selectionEnd = start + 1;
       }
     });
+     const modal = document.getElementById('solutionModal');
+
+    function openSolution() {
+        modal.classList.add('open');
+    }
+
+    function closeSolution() {
+        modal.classList.remove('open');
+    }
+
+    // Klik di luar modal buat nutup
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeSolution();
+        }
+    });
+
+    // Fitur Copy Code
+    function copySolution() {
+        const code = document.querySelector('.code-block').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('Kode berhasil disalin!');
+            closeSolution();
+        });
+    }
   </script>
 </body>
 </html>

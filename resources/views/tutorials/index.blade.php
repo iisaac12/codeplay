@@ -29,20 +29,29 @@
   <header class="app-header" style="background: white; border-bottom: 1px solid #e5e7eb; padding: 12px 0;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px;">
       <a href="{{ route('user.dashboard') }}" class="brand" style="text-decoration: none; color: #1e293b; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px;">
-        <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">CP</span>
-        <span>CodePlay</span>
+        <img src="{{ asset('assets/logo.svg') }}" class="logo">
+        <span class="brand-name">CodePlay</span>
       </a>
       
-      <div class="profile" style="display: flex; align-items: center; gap: 12px;">
-         <div style="text-align: right; line-height: 1.2;">
-            <div style="font-weight: 700; font-size: 14px; color: #1e293b;">
-                {{ Auth::user()->full_name }}
+      <div class="profile">
+        <div class="profile-info">
+        <div class="profile">
+        <a href="{{ route('profile.show') }}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <img 
+                src="{{ $user->avatar_url ? asset('storage/' . $user->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($user->full_name ?? $user->username).'&background=3b82f6&color=fff&bold=true' }}" 
+                alt="Profile" 
+                class="avatar" 
+                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; padding: 1px;"
+            />
+            <div class="profile-info" style="text-align: right; line-height: 1.2;">
+                <span class="name" style="font-weight: 700; font-size: 14px; color: #1e293b; display: block;">
+                    {{ $user->full_name ?? $user->username }}
+                </span>
+                <span class="role text-muted" style="font-size: 11px; font-weight: 500;">
+                    {{ ucfirst($user->role) }}
+                </span>
             </div>
-            <div style="font-size: 11px; color: #64748b; font-weight: 500;">
-                {{ ucfirst(Auth::user()->role) }}
-            </div>
-         </div>
-         <img src="{{ Auth::user()->avatar_url ? asset(Auth::user()->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->full_name).'&background=3b82f6&color=fff&bold=true' }}" style="width: 42px; height: 42px; border-radius: 50%; padding: 2px; border: 1px solid #e2e8f0;">
+        </a>
       </div>
     </div>
   </header>

@@ -32,7 +32,6 @@
   <main class="container mb-24">
     <div class="detail-grid">
         
-        {{-- KOLOM KIRI: INFO KURSUS --}}
         <div class="left-content">
             <h1 class="h1">{{ $course->title }}</h1>
             <p class="lead text-muted">{{ $course->description }}</p>
@@ -54,8 +53,12 @@
         {{-- KOLOM KANAN: KARTU AKSES (TOMBOL ENROLL DISINI) --}}
         <div class="right-sidebar">
             <div class="card card-elevated" style="position: sticky; top: 24px;">
-                <img src="{{ $course->thumbnail ? asset('storage/'.$course->thumbnail) : 'https://placehold.co/600x400' }}" 
-                     class="hero-thumb mb-16">
+          <img 
+              src="{{ $course->thumbnail_url ? asset('storage/' . $course->thumbnail_url) : 'https://placehold.co/600x400?text=No+Image' }}" 
+              alt="{{ $course->title }}" 
+              class="course-thumb" 
+              style="width: 100%; height: 160px; object-fit: cover;"
+          />
 
                 {{-- LOGIKA TOMBOL ENROLL --}}
                 @auth

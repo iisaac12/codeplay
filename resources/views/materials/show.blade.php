@@ -7,6 +7,9 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <!-- 1. Kita tambahkan CSS SweetAlert -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
     /* Style sama persis dengan learn.blade.php */
@@ -32,12 +35,12 @@
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="{{ route('user.dashboard') }}" class="brand">
-        <img src="{{ asset('assets/logo.svg') }}" class="logo" style="width:40px;">
+        <img src="{{ asset('assets/logo.svg') }}" class="logo">
         <span class="brand-name">CodePlay</span>
       </a>
       <div class="nav">
         {{-- Tombol kembali ke halaman depan course --}}
-        <a href="{{ route('course.learn', $course->slug) }}" class="btn btn-ghost btn-sm">
+        <a href="{{ route('course.show', $course->slug) }}" class="btn btn-ghost btn-sm">
             <i class="fa-solid fa-arrow-left me-2"></i> Back to Course Home
         </a>
       </div>
@@ -47,7 +50,7 @@
   <main class="container mb-24">
     <div class="learn-grid">
 
-        {{-- SIDEBAR (Sama dengan learn.blade.php) --}}
+        {{-- SIDEBAR: DAFTAR ISI (CURRICULUM) --}}
         <aside class="curriculum-card card card-elevated">
             <h3 class="h3 mb-16">Curriculum</h3>
             
@@ -65,13 +68,14 @@
                         <div style="font-size: 14px; font-weight: 500;">{{ $item->title }}</div>
                         <small class="text-muted">{{ $item->duration ? $item->duration . ' min' : 'Read' }}</small>
                     </div>
+                    
+                    {{-- Indikator Centang Jika Selesai (Opsional, perlu cek progress) --}}
                     @if($item->material_id == $material->material_id)
                         <i class="fa-solid fa-circle-play text-primary"></i>
                     @endif
                 </a>
             @endforeach
             
-            {{-- Loop Tutorial & Quiz (Opsional, copy dari learn.blade.php jika mau lengkap) --}}
         </aside>
 
         {{-- AREA KONTEN UTAMA --}}
@@ -95,7 +99,7 @@
                         @endif
                     </div>
                 
-                {{-- 2. JIKA PDF --}}
+
                 @elseif($material->type == 'pdf')
                     <div style="height: 600px; overflow: hidden;">
                         <iframe src="{{ route('material.stream', $material->material_id) }}" 
@@ -103,8 +107,7 @@
                         </iframe>
                     </div>
 
-                {{-- 3. JIKA TEXT / ARTIKEL --}}
-                @else
+                    @else
                     <div class="p-5">
                         {{-- Menampilkan Gambar Cover jika ada --}}
                         @if($material->file_url && !Str::endsWith($material->file_url, '.pdf'))
@@ -123,12 +126,15 @@
                     <p class="text-muted">{{ $material->description ?? 'Pelajari materi ini dengan seksama.' }}</p>
                     
                     <div class="d-flex justify-content-between mt-4">
-                        <button class="btn btn-outline">Previous Lesson</button>
+                        <button class="btn btn-outline" disabled>Previous Lesson</button>
+                        
+                        <!-- FORM MARK AS COMPLETED -->
                         <form action="{{ route('material.progress', $material->material_id) }}" method="POST">
                             @csrf
                             <input type="hidden" name="completed" value="1">
                             <div style="height: 10px;"></div>
-                            <button type="submit" class="btn btn-primary" style="margin 10px">
+                            
+                            <button type="submit" class="btn btn-primary">
                                 Mark as Completed <i class="fa-solid fa-check ms-2"></i>
                             </button>
                         </form>
@@ -140,6 +146,38 @@
 
     </div>
   </main>
+
+  <!-- 2. Tambahkan JS SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- 3. Script untuk menangkap Session Success dari Controller -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = {!! json_encode(session('success')) !!};
+        const errorMessage = {!! json_encode(session('error')) !!};
+
+        if (successMessage) {
+            Swal.fire({
+                title: 'Good Job! 🎉',
+                text: successMessage, // Pesan dari controller
+                icon: 'success',
+                confirmButtonText: 'Lanjut',
+                confirmButtonColor: '#3b82f6', // Sesuaikan warna primary kamu
+                timer: 3000, // Otomatis tutup dalam 3 detik (opsional)
+                timerProgressBar: true
+            });
+        }
+        
+        if (errorMessage) {
+            Swal.fire({
+                title: 'Oops...',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Tutup'
+            });
+        }
+    });
+  </script>
 
 </body>
 </html>

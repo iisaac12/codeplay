@@ -105,7 +105,6 @@
                 </button>
             </div>
 
-            <!-- Users Table -->
             <div id="usersSection">
                 <div class="card card-elevated">
                     <div class="card-header">

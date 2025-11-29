@@ -19,7 +19,7 @@
       <a href="{{ url('/') }}" class="brand mb-16">
         {{-- 3. Mengambil gambar menggunakan asset() --}}
         <img src="{{ asset('assets/logo.svg') }}" class="logo" />
-        <span class="brand-name">LearnCode</span>
+        <span class="brand-name">CodePlay</span>
       </a>
 
       <h1 class="h3">Welcome back</h1>

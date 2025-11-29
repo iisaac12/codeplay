@@ -11,6 +11,11 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\ProfileController;
+
+//default Route
+Route::get('/', [AuthController::class, 'showLogin'])->name('home');
+
 
 // Auth Routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -50,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/quiz/{id}/start', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/quiz/attempt/{id}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
     Route::get('/quiz/result/{id}', [QuizController::class, 'result'])->name('quiz.result');
+    Route::get('/quiz/attempt/{attemptId}', [QuizController::class, 'attempt'])->name('quiz.attempt');
+    Route::post('/quiz/attempt/{attemptId}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+    Route::get('/quiz/result/{attemptId}', [QuizController::class, 'result'])->name('quiz.result'); 
     
     // Forum
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
@@ -88,4 +96,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/course/{id}/verify', [AdminController::class, 'verifyCourse'])->name('course.verify');       Route::delete('/user/{id}/delete', [AdminController::class, 'deleteUser'])->name('user.delete');    
         Route::delete('/course/{id}/delete', [AdminController::class, 'deleteCourse'])->name('course.delete');
     });
+
+    // Profile Routes
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
 });

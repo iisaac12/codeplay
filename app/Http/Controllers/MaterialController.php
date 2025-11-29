@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Course;
@@ -11,108 +12,127 @@ use Illuminate\Support\Facades\Storage;
 
 class MaterialController extends Controller
 {
-
-    // Menampilkan daftar semua materi
+    /**
+     * Menampilkan daftar materi
+     */
     public function index()
     {
-        // Ambil data materi, kita eager load 'course' agar efisien
-        // paginate(10) artinya memunculkan 10 materi per halaman
-        $materials = CourseMaterial::with('course')->latest()->paginate(10);
+        $user = Auth::user(); // <--- TAMBAHKAN INI
+        $userId = $user->user_id; // Atau Auth::id()
 
-        // Pastikan kamu nanti membuat file view di: resources/views/materials/index.blade.php
-        return view('materials.index', compact('materials'));
+        // 1. Ambil daftar ID kursus yang diikuti user saat ini
+        $enrolledCourseIds = UserEnrollment::where('user_id', $userId)
+            ->pluck('course_id');
+
+        // 2. Ambil materi yang course_id-nya ada di daftar enrollment tersebut
+        $materials = CourseMaterial::whereIn('course_id', $enrolledCourseIds)
+            ->with('course') 
+            ->orderBy('created_at', 'desc') 
+            ->paginate(10); 
+
+        // Jangan lupa kirim 'user' ke view
+        return view('materials.index', compact('materials', 'user'));
     }
     
-    // Tampilkan materi
+    // Tampilkan detail materi
     public function show($materialId)
     {
-        $material = CourseMaterial::where('material_id', $materialId)->firstOrFail();
+        $user = Auth::user(); // <--- Tambahkan ini juga biar aman
 
+        $material = CourseMaterial::where('material_id', $materialId)->firstOrFail();
         $course = $material->course;
 
         $course->load(['materials', 'tutorials', 'quizzes']);
 
-        $enrollment = UserEnrollment::where('user_id', Auth::id())
+        $enrollment = UserEnrollment::where('user_id', $user->user_id)
             ->where('course_id', $course->course_id)
             ->firstOrFail();
-        // Get or create progress
+
+        $progress = MaterialProgress::firstOrCreate([
+            'user_id' => $user->user_id,
+            'material_id' => $materialId
+        ]);
+
+        // Kirim 'user' ke view
+        return view('materials.show', compact('material', 'course', 'enrollment', 'progress', 'user'));
+    }
+
+    // Update progress materi (Mark as Completed)
+    public function updateProgress(Request $request, $materialId)
+    {
         $progress = MaterialProgress::firstOrCreate([
             'user_id' => Auth::id(),
             'material_id' => $materialId
         ]);
 
-        return view('materials.show', compact('material', 'course', 'enrollment', 'progress'));
-    }
-
-    // Update progress materi
-    public function updateProgress(Request $request, $materialId)
-    {
-        $progress = MaterialProgress::where('user_id', Auth::id())
-            ->where('material_id', $materialId)
-            ->first();
-
-        if ($progress) {
-            $progress->last_position = $request->input('position', 0);
-            
-            if ($request->has('completed') && $request->completed) {
-                $progress->is_completed = true;
-                $progress->completed_at = now();
-            }
-            
-            $progress->save();
-
-            // Update enrollment progress
-            $this->updateEnrollmentProgress($materialId);
+        $progress->last_position = $request->input('position', 0);
+        
+        if ($request->has('completed') && $request->completed) {
+            $progress->is_completed = true;
+            $progress->completed_at = now();
         }
+        
+        $progress->save();
 
-        return response()->json(['success' => true]);
+        $this->updateEnrollmentProgress($materialId);
+
+        return redirect()->back()->with('success', 'Materi berhasil diselesaikan! Progres tersimpan.');
     }
 
-    // Download materi
+    // Download file materi
     public function download($materialId)
     {
         $material = CourseMaterial::findOrFail($materialId);
 
-        // Log download
+        // Cek tipe materi: Jika text atau code, tolak download
+        if (in_array($material->type, ['text', 'code'])) {
+            return redirect()->back()->with('error', 'Materi bertipe Teks atau Kode tidak dapat diunduh.');
+        }
+
         \App\Models\Download::create([
             'user_id' => Auth::id(),
             'material_id' => $materialId
         ]);
 
-        return response()->download(public_path($material->file_url));
-    }
-
-public function streamPdf($id)
-{
-    $material = \App\Models\CourseMaterial::findOrFail($id);
-    
-    // Asumsi di database isinya: "materials/laravel-cheatsheet.pdf"
-    $filename = $material->file_url; 
-
-    // PENTING: Kita paksa pakai disk 'public'
-    if (Storage::disk('public')->exists($filename)) {
+        // Cek file
+        if (Storage::disk('public')->exists($material->file_url)) {
+             return Storage::disk('public')->download($material->file_url);
+        }
         
-        // Ambil full path dari disk public
-        $fullPath = Storage::disk('public')->path($filename);
-
-        return response()->file($fullPath, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . basename($filename) . '"'
-        ]);
+        $path = 'public/' . $material->file_url;
+        if (Storage::exists($path)) {
+            return Storage::download($path);
+        } 
+        
+        return redirect()->back()->with('error', 'Maaf, file fisik tidak ditemukan di server.');
     }
 
-    // Debugging: Kalau masih error, kasih tau dia nyari dimana
-    return response()->json([
-        'error' => 'File tidak ditemukan',
-        'lokasi_seharusnya' => storage_path('app/public/' . $filename),
-        'cek_disk_public' => Storage::disk('public')->path($filename),
-    ], 404);
-}    private function updateEnrollmentProgress($materialId)
+    // Stream PDF
+    public function streamPdf($id)
+    {
+        $material = \App\Models\CourseMaterial::findOrFail($id);
+        $filename = $material->file_url; 
+
+        if (Storage::disk('public')->exists($filename)) {
+            $fullPath = Storage::disk('public')->path($filename);
+
+            return response()->file($fullPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($filename) . '"'
+            ]);
+        }
+
+        return abort(404, 'File PDF tidak ditemukan');
+    }
+
+    // Helper
+    private function updateEnrollmentProgress($materialId)
     {
         $material = CourseMaterial::findOrFail($materialId);
         $courseId = $material->course_id;
 
         $totalMaterials = CourseMaterial::where('course_id', $courseId)->count();
+        
         $completedMaterials = MaterialProgress::where('user_id', Auth::id())
             ->whereHas('material', function($q) use ($courseId) {
                 $q->where('course_id', $courseId);
@@ -120,12 +140,18 @@ public function streamPdf($id)
             ->where('is_completed', true)
             ->count();
 
-        $progress = $totalMaterials > 0 ? ($completedMaterials / $totalMaterials) * 100 : 0;
+        $progress = $totalMaterials > 0 ? round(($completedMaterials / $totalMaterials) * 100, 2) : 0;
+
+        $updateData = ['progress_percentage' => $progress];
+        
+        if ($progress >= 100) {
+            $updateData['completed_at'] = now();
+        } else {
+            $updateData['completed_at'] = null; 
+        }
 
         UserEnrollment::where('user_id', Auth::id())
             ->where('course_id', $courseId)
-            ->update(['progress_percentage' => $progress]);
+            ->update($updateData);
     }
-    
-   
 }

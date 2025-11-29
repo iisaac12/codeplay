@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Register — LearnCode</title>
+  <title>Register — Codeplay</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -13,8 +13,8 @@
   <main class="auth-split">
     <section class="auth-form card card-elevated">
       <a href="{{ url('/') }}" class="brand mb-24">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="LearnCode Logo" class="logo" />
-        <span class="brand-name">LearnCode</span>
+        <img src="{{ asset('assets/logo.svg') }}" class="logo">
+        <span class="brand-name">CodePlay</span>
       </a>
       <h1 class="h2">Create your account</h1>
       <p class="text-muted mb-24">Start learning to code today.</p>

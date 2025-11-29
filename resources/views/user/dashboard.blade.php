@@ -22,28 +22,41 @@
         <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
         <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>
       </nav>
+      
+      <!-- PROFILE SECTION (UPDATED) -->
       <div class="profile">
-        {{-- Menggunakan UI Avatars sebagai fallback jika user tidak punya foto --}}
-        <img src="https://ui-avatars.com/api/?name={{ urlencode($user->username) }}&background=random" alt="Profile" class="avatar" />
-        <div class="profile-info">
-          <span class="name">{{ $user->username }}</span>
-          <span class="role text-muted">Student</span>
-        </div>
+        <a href="{{ route('profile.show') }}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <!-- Avatar Logic: Cek DB -> Fallback UI Avatars -->
+            <img 
+                src="{{ $user->avatar_url ? asset('storage/' . $user->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($user->full_name ?? $user->username).'&background=3b82f6&color=fff&bold=true' }}" 
+                alt="Profile" 
+                class="avatar" 
+                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; padding: 1px;"
+            />
+            <div class="profile-info" style="text-align: right; line-height: 1.2;">
+                <span class="name" style="font-weight: 700; font-size: 14px; color: #1e293b; display: block;">
+                    {{ $user->full_name ?? $user->username }}
+                </span>
+                <span class="role text-muted" style="font-size: 11px; font-weight: 500;">
+                    {{ ucfirst($user->role) }}
+                </span>
+            </div>
+        </a>
       </div>
+
     </div>
   </header>
 
   <main class="container">
     <section class="welcome card">
       <div>
-        <h1 class="h3">Welcome back, {{ $user->username }}</h1>
+        <h1 class="h3">Welcome back, {{ $user->full_name ?? $user->username }}</h1>
         <p class="text-muted">Continue where you left off or explore new courses.</p>
       </div>
     </section>
 
+    <!-- Filter Form -->
     <form action="{{ route('user.dashboard') }}" method="GET" class="filter-bar card">
-      
-      {{-- Tambahan: Input Search --}}
       <div class="filter-group">
         <label for="search">Search</label>
         <input type="text" name="search" id="search" class="select" placeholder="Search courses..." value="{{ request('search') }}">
@@ -51,7 +64,6 @@
 
       <div class="filter-group">
         <label for="category">Category</label>
-        {{-- onchange="this.form.submit()" agar otomatis reload saat dipilih --}}
         <select name="category" id="category" class="select" onchange="this.form.submit()">
           <option value="">All Categories</option>
           @foreach($categories as $cat)
@@ -72,44 +84,60 @@
         </select>
       </div>
 
-      {{-- Tombol Reset --}}
       <div class="filter-group">
           <a href="{{ route('user.dashboard') }}" class="btn btn-outline-secondary" style="padding: 10px; text-decoration:none; border:1px solid #ccc; border-radius:8px;">Reset</a>
       </div>
     </form>
 
-    {{-- 2. BAGIAN GRID COURSES (DINAMIS) --}}
+    {{-- GRID COURSES --}}
     <section class="courses-grid">
       @forelse($courses as $course)
         <article class="course-card card card-elevated">
-          {{-- Gambar Thumbnail (Pastikan ada kolom 'thumbnail' di database, atau pakai default) --}}
-          <img src="{{ $course->thumbnail ? asset('storage/'.$course->thumbnail) : 'https://placehold.co/600x400?text=No+Image' }}" 
-               alt="{{ $course->title }}" class="course-thumb" />
+          
+          {{-- GAMBAR KURSUS (DIPERBAIKI) --}}
+          {{-- Kita tambahkan onerror agar kalau gambar rusak, otomatis ganti placeholder --}}
+          <img 
+              src="{{ $course->thumbnail_url ? asset('storage/' . $course->thumbnail_url) : 'https://placehold.co/600x400?text=No+Image' }}" 
+              alt="{{ $course->title }}" 
+              class="course-thumb" 
+              style="width: 100%; height: 160px; object-fit: cover;"
+          />
           
           <div class="course-content">
             <div class="course-top">
               <h3>{{ $course->title }}</h3>
-              {{-- Badge Level (Warna bisa disesuaikan pakai if/switch kalau mau) --}}
               <span class="level tag">{{ ucfirst($course->level) }}</span>
             </div>
             
             <p class="text-muted">{{ Str::limit($course->description, 80) }}</p>
             
-            {{-- Cek apakah user sudah terdaftar --}}
-            @if(in_array($course->course_id, $enrolledCourseIds))
-                {{-- TAMPILAN JIKA SUDAH ENROLL (Ada Progress Bar) --}}
+            @php
+                $userEnrollment = isset($enrollments) ? ($enrollments[$course->course_id] ?? null) : null;
+            @endphp
+
+            @if($userEnrollment)
                 <div class="progress-wrap">
-                    {{-- Catatan: Progress dinamis butuh logic tambahan di controller, sementara kita set statis atau ambil jika ada --}}
-                    <div class="progress-bar"><span class="progress" style="width: 20%"></span></div>
-                    <span class="progress-label">Enrolled</span>
+                    @php $percent = $userEnrollment->progress_percentage; @endphp
+                    
+                    <div class="progress-bar">
+                        <span class="progress" style="width: {{ $percent }}%"></span>
+                    </div>
+                    
+                    <span class="progress-label" style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>{{ $percent == 100 ? 'Completed 🎉' : 'In Progress' }}</span>
+                        <strong>{{ round($percent) }}%</strong>
+                    </span>
                 </div>
+                
                 <div class="card-actions">
-                    <a href="{{ route('course.learn', $course->slug) }}" class="btn btn-primary">Continue learning</a>
+                    <a href="{{ route('course.learn', $course->slug) }}" class="btn {{ $percent == 100 ? 'btn-success' : 'btn-primary' }}">
+                        {{ $percent == 100 ? 'Review Course' : 'Continue Learning' }}
+                    </a>
                 </div>
             @else
-                {{-- TAMPILAN JIKA BELUM ENROLL --}}
                 <div class="progress-wrap" style="opacity: 0; visibility: hidden;">
-                    <div class="progress-bar"></div> </div>
+                    <div class="progress-bar"></div> 
+                </div>
                 <div class="card-actions">
                     <a href="{{ route('course.show', $course->slug) }}" class="btn btn-outline-primary w-100">View Details</a>
                 </div>
@@ -118,7 +146,6 @@
           </div>
         </article>
       @empty
-        {{-- TAMPILAN JIKA TIDAK ADA COURSE --}}
         <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
             <i class="fa-solid fa-box-open" style="font-size: 48px; color: #ccc; margin-bottom: 16px;"></i>
             <h3>No courses found</h3>
@@ -127,7 +154,6 @@
       @endforelse
     </section>
 
-    {{-- 3. PAGINATION --}}
     <div style="margin-top: 32px; display: flex; justify-content: center;">
         {{ $courses->withQueryString()->links() }}
     </div>

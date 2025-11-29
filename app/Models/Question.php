@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $table = 'questions';
-    protected $primaryKey = 'question_id';
+    protected $primaryKey = 'question_id'; // Kunci utama agar relasi terbaca
     
     public $timestamps = false;
 
@@ -30,6 +31,7 @@ class Question extends Model
 
     public function options()
     {
+        // Relasi ke opsi jawaban, diurutkan biar A, B, C, D rapi
         return $this->hasMany(QuestionOption::class, 'question_id', 'question_id')
                     ->orderBy('order_index');
     }

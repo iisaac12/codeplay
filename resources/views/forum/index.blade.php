@@ -3,128 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-<<<<<<< HEAD:resources/views/forumUser.blade.php
-  <title>Forum — CodePlay</title>
-=======
   <title>Forum — Codeplay</title>
->>>>>>> 94f089fb40ccd3aac10a27c4728e8d06318f7db1:resources/views/forum/index.blade.php
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <style>
+      .search-box { position: relative; margin-bottom: 24px; }
+      .search-input { width: 100%; padding: 12px 16px; padding-left: 40px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; }
+      .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+      
+      .tag-active { background-color: #3b82f6 !important; color: white !important; }
+      
+      .pagination { display: flex; justify-content: center; margin-top: 32px; }
+  </style>
 </head>
 <body class="bg-light">
+  
   <header class="app-header">
     <div class="container app-header-inner">
-<<<<<<< HEAD:resources/views/forumUser.blade.php
-      <a href="../index.html" class="brand">
-        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
-        <span class="brand-name">CodePlay</span>
-=======
       <a href="{{ route('user.dashboard') }}" class="brand">
-      <img src="{{ asset('assets/logo.svg') }}" class="logo">
-      <span class="brand-name">CodePlay</span>
->>>>>>> 94f089fb40ccd3aac10a27c4728e8d06318f7db1:resources/views/forum/index.blade.php
+        <img src="{{ asset('assets/logo.svg') }}" class="logo">
+        <span class="brand-name">CodePlay</span>
       </a>
       <nav class="app-nav">
         <a href="{{ route('user.dashboard') }}" class="nav-link">Courses</a>
         <a href="{{ route('materials.index') }}" class="nav-link">Materials</a>
         <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
-         <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>
+        <a href="{{ route('forum.index')}}" class="nav-link active" style="color: #1e293b;">Forum</a>
       </nav>
-      <a href="post-question.html" class="btn btn-primary">
-        <i class="fa-solid fa-plus"></i> Post question
+      
+      <a href="{{ route('forum.create') }}" class="btn btn-primary">
+        <i class="fa-solid fa-plus me-2"></i> Post question
       </a>
     </div>
   </header>
 
-  <main class="container forum-wrap">
-    <aside class="forum-tags card">
-      <h3>Tags</h3>
-      <ul class="tag-list">
-        <li><span class="tag">javascript</span></li>
-        <li><span class="tag">css</span></li>
-        <li><span class="tag">html</span></li>
-        <li><span class="tag">beginner</span></li>
-      </ul>
+  <main class="container forum-wrap" style="display: grid; grid-template-columns: 250px 1fr; gap: 32px; margin-top: 32px;">
+    
+    <aside>
+        <div class="card p-4" style="background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <h3 class="h5 mb-3" style="font-weight: 700;">Categories</h3>
+            <ul class="tag-list" style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+                <li>
+                    <a href="{{ route('forum.index') }}" class="tag {{ !request('category') ? 'tag-active' : '' }}" style="text-decoration: none; display: inline-block; padding: 6px 12px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 13px; font-weight: 500;">
+                        All
+                    </a>
+                </li>
+                @foreach($categories as $category)
+                    <li>
+                        <a href="{{ route('forum.index', ['category' => $category->name]) }}" 
+                           class="tag {{ request('category') == $category->name ? 'tag-active' : '' }}"
+                           style="text-decoration: none; display: inline-block; padding: 6px 12px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 13px; font-weight: 500;">
+                            {{ strtolower($category->name) }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
     </aside>
 
-    <!-- Semua pertanyaan akan dimuat di sini -->
-    <section class="forum-threads" id="forum-threads"></section>
+    <section class="forum-threads">
+        
+        <form action="{{ route('forum.index') }}" method="GET" class="search-box">
+            <input type="text" name="search" class="search-input" placeholder="Search discussions..." value="{{ request('search') }}">
+        </form>
+
+        @if(session('success'))
+            <div style="background: #dcfce7; color: #166534; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbf7d0;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @forelse($threads as $thread)
+            <article class="thread card card-elevated" style="margin-bottom: 16px; padding: 24px; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div class="thread-top">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <h3 class="h4" style="margin: 0 0 8px 0;">
+                            <a href="{{ route('forum.show', $thread->thread_id) }}" style="text-decoration: none; color: #1e293b;">
+                                @if($thread->is_pinned) <i class="fa-solid fa-thumbtack" style="color: #ef4444; margin-right: 6px;"></i> @endif
+                                {{ $thread->title }}
+                            </a>
+                        </h3>
+                    </div>
+                    
+                    <div class="thread-meta text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 12px;">
+                        <span>by <strong style="color: #334155;">{{ $thread->user->full_name }}</strong></span>
+                        <span>• {{ $thread->created_at->diffForHumans() }}</span>
+                        
+                        @if($thread->course)
+                            <span class="tag" style="background: #eff6ff; color: #3b82f6; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                {{ $thread->course->category->name ?? 'General' }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                
+                <p style="color: #475569; line-height: 1.6; margin: 12px 0;">
+                    {{ Str::limit($thread->content, 150) }}
+                </p>
+                
+                <div class="thread-actions" style="display: flex; gap: 16px; border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: 12px;">
+                    <a href="{{ route('forum.show', $thread->thread_id) }}" class="btn btn-ghost" style="color: #64748b; font-size: 13px; text-decoration: none;">
+                        <i class="fa-regular fa-comment me-1"></i> {{ $thread->replies_count }} Replies
+                    </a>
+                    <span class="btn btn-ghost" style="color: #64748b; font-size: 13px;">
+                        <i class="fa-regular fa-eye me-1"></i> {{ $thread->view_count }} Views
+                    </span>
+                </div>
+            </article>
+        @empty
+            <div class="card p-5 text-center" style="background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png" style="width: 150px; opacity: 0.6; margin-left: 40%;">
+                <h3 class="mt-3 text-muted">No discussions found</h3>
+                <p class="text-muted" style="font-size: 14px;">Be the first to start a conversation!</p>
+                <a href="{{ route('forum.create') }}" class="btn btn-primary mt-3">Start Discussion</a>
+            </div>
+        @endforelse
+
+        <div class="pagination">
+            {{ $threads->withQueryString()->links() }}
+        </div>
+
+    </section>
   </main>
 
-  <script>
-    // Inisialisasi pertanyaan default hanya sekali
-    if (!localStorage.getItem("forumPosts")) {
-      const defaultPosts = [
-        {
-          title: "How do closures work in JS?",
-          tag: "javascript",
-          content: "I'm confused about variables captured by functions—any simple example?",
-          author: "Rina",
-          time: "2h ago"
-        },
-        {
-          title: "Flexbox: align-items vs justify-content?",
-          tag: "css",
-          content: "When should I use each? Tips with common layouts appreciated.",
-          author: "Dio",
-          time: "5h ago"
-        }
-      ];
-      localStorage.setItem("forumPosts", JSON.stringify(defaultPosts));
-    }
-
-    // Render semua pertanyaan dari localStorage
-   function renderForumPosts() {
-  const container = document.getElementById("forum-threads");
-  const posts = JSON.parse(localStorage.getItem("forumPosts") || "[]");
-
-  container.innerHTML = "";
-
-  posts.forEach((post, index) => {
-    const article = document.createElement("article");
-    article.className = "thread card card-elevated";
-    article.innerHTML = `
-      <div class="thread-top">
-        <h3>${post.title}</h3>
-        <div class="thread-meta text-muted">
-          <span>by <strong>${post.author}</strong></span> · <span>${post.time}</span> · <span class="tag clickable" data-tag="${post.tag}">${post.tag}</span>
-        </div>
-      </div>
-      <p>${post.content}</p>
-      <div class="thread-actions">
-        <button class="btn btn-ghost"><i class="fa-regular fa-comment"></i> Reply</button>
-        <button class="btn btn-ghost"><i class="fa-regular fa-thumbs-up"></i> Upvote</button>
-        <button class="btn btn-danger delete-btn" data-index="${index}"><i class="fa-solid fa-trash"></i> Delete</button>
-      </div>
-      <div class="reply-area">
-        <input type="text" class="input" placeholder="Write a reply..." />
-        <button class="btn btn-primary">Send</button>
-      </div>
-    `;
-    container.appendChild(article);
-  });
-
-  // Tambahkan event listener untuk tombol delete
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", function() {
-      const index = this.getAttribute("data-index");
-      const posts = JSON.parse(localStorage.getItem("forumPosts") || "[]");
-      posts.splice(index, 1);
-      localStorage.setItem("forumPosts", JSON.stringify(posts));
-      renderForumPosts(); // refresh tampilan
-    });
-  });
-
-  // Tambahkan event listener untuk filter tag
-  document.querySelectorAll(".tag.clickable").forEach(tag => {
-    tag.addEventListener("click", function() {
-      const selectedTag = this.getAttribute("data-tag");
-      filterByTag(selectedTag);
-    });
-  });
-}
-
-  </script>
 </body>
 </html>

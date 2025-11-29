@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,8 +8,7 @@ class UserAnswer extends Model
 {
     protected $table = 'user_answers';
     protected $primaryKey = 'answer_id';
-    
-    public $timestamps = false;
+    public $timestamps = false; // Karena di DB cuma ada answered_at
 
     protected $fillable = [
         'attempt_id',
@@ -16,19 +16,14 @@ class UserAnswer extends Model
         'selected_option_id',
         'answer_text',
         'is_correct',
-        'points_earned'
+        'points_earned',
+        'answered_at'
     ];
 
     protected $casts = [
         'is_correct' => 'boolean',
-        'answered_at' => 'datetime',
+        'answered_at' => 'datetime'
     ];
-
-    // Relationships
-    public function attempt()
-    {
-        return $this->belongsTo(QuizAttempt::class, 'attempt_id', 'attempt_id');
-    }
 
     public function question()
     {
