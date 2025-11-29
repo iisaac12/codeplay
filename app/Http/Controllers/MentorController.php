@@ -1,123 +1,118 @@
 <?php
+// app/Http/Controllers/MentorController.php
 
 namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseMaterial;
-use App\Models\MentorForum;
-use App\Models\MentorForumReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class MentorController extends Controller
 {
     // Dashboard mentor
     public function dashboard()
     {
-        $courses = Course::where('mentor_id', Auth::id())
-            ->withCount('enrollments')
+        $mentorId = Auth::id();
+        
+        // Get mentor's courses
+        $courses = Course::where('mentor_id', $mentorId)->get();
+        
+        // Get all materials from mentor's courses
+        $materials = CourseMaterial::whereIn('course_id', $courses->pluck('course_id'))
+            ->with('course')
+            ->orderBy('created_at', 'desc')
             ->get();
-
-        return view('mentor.dashboard', compact('courses'));
+        
+        // Calculate stats
+        $totalVideos = $materials->where('type', 'video')->count();
+        $publishedVideos = $materials->where('type', 'video')
+            ->filter(function($material) {
+                return $material->is_published ?? true; // Default published if no column
+            })->count();
+        $draftVideos = $totalVideos - $publishedVideos;
+        $totalViews = $materials->sum('views') ?? 0; // Sum views if column exists
+        
+        return view('mentor.dashboard', compact(
+            'materials',
+            'courses',
+            'totalVideos',
+            'publishedVideos',
+            'draftVideos',
+            'totalViews'
+        ));
     }
 
-    // CRUD Video/Materi
-    public function createMaterial($courseId)
-    {
-        $course = Course::where('mentor_id', Auth::id())
-            ->findOrFail($courseId);
-
-        return view('mentor.materials.create', compact('course'));
-    }
-
-    public function storeMaterial(Request $request, $courseId)
+    // Store new material/video
+    public function storeMaterial(Request $request)
     {
         $request->validate([
+            'course_id' => 'required|exists:courses,course_id',
             'title' => 'required|max:200',
-            'type' => 'required|in:video,text,code,pdf',
-            'content' => 'required_if:type,text,code',
-            'file' => 'required_if:type,video,pdf|file|max:50000'
+            'video' => 'required|file|mimes:mp4|max:102400', // 100MB max
         ]);
 
-        $fileUrl = null;
-        if ($request->hasFile('file')) {
-            $fileUrl = $request->file('file')->store('materials', 'public');
+        // Upload video file
+        if ($request->hasFile('video')) {
+            $file = $request->file('video');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('materials/videos', $fileName, 'public');
+            
+            // Get video duration (optional, needs getID3 library)
+            // For now, set default duration
+            $duration = 0; // You can use getID3 to get actual duration
+            
+            CourseMaterial::create([
+                'course_id' => $request->course_id,
+                'title' => $request->title,
+                'type' => 'video',
+                'file_url' => $filePath,
+                'order_index' => 0,
+                'duration' => $duration,
+                'is_published' => $request->has('is_published') ? true : false,
+            ]);
+
+            return redirect()->route('mentor.dashboard')
+                ->with('success', "Video '{$request->title}' berhasil ditambahkan!");
         }
 
-        CourseMaterial::create([
-            'course_id' => $courseId,
-            'title' => $request->input('title'),
-            'type' => $request->input('type'),
-            'content' => $request->input('content'),
-            'file_url' => $fileUrl,
-            'order_index' => $request->input('order_index', 0)
-        ]);
-
-        return redirect()->route('mentor.course.show', $courseId)
-            ->with('success', 'Materi berhasil ditambahkan!');
+        return redirect()->back()->with('error', 'Gagal upload video!');
     }
 
-    // Forum Mentor
-    public function forumIndex()
+    // Delete material
+    public function deleteMaterial($materialId)
     {
-        $forums = MentorForum::with('mentor')
-            ->orderBy('is_pinned', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $material = CourseMaterial::findOrFail($materialId);
+        
+        // Check if mentor owns this material
+        $course = $material->course;
+        if ($course->mentor_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action!');
+        }
 
-        return view('mentor.forum.index', compact('forums'));
+        // Delete file from storage
+        if ($material->file_url) {
+            Storage::disk('public')->delete($material->file_url);
+        }
+
+        $materialTitle = $material->title;
+        $material->delete();
+
+        return redirect()->route('mentor.dashboard')
+            ->with('success', "Video '{$materialTitle}' berhasil dihapus!");
     }
 
-    public function forumCreate()
+    // Edit material (placeholder)
+    public function editMaterial($materialId)
     {
-        return view('mentor.forum.create');
-    }
+        $material = CourseMaterial::with('course')->findOrFail($materialId);
+        
+        // Check if mentor owns this material
+        if ($material->course->mentor_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
 
-    public function forumStore(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|max:200',
-            'content' => 'required',
-            'category' => 'required|in:tips,best_practice,discussion,question,announcement'
-        ]);
-
-        $forum = MentorForum::create([
-            'mentor_id' => Auth::id(),
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
-            'category' => $request->input('category')
-        ]);
-
-        return redirect()->route('mentor.forum.show', $forum->forum_id);
-    }
-
-    public function forumShow($forumId)
-    {
-        $forum = MentorForum::with(['mentor', 'replies.mentor'])
-            ->findOrFail($forumId);
-
-        // Increment view using DB query
-        DB::table('mentor_forums')
-            ->where('forum_id', $forumId)
-            ->increment('view_count');
-
-        return view('mentor.forum.show', compact('forum'));
-    }
-
-    public function forumReply(Request $request, $forumId)
-    {
-        $request->validate([
-            'content' => 'required'
-        ]);
-
-        MentorForumReply::create([
-            'forum_id' => $forumId,
-            'mentor_id' => Auth::id(),
-            'content' => $request->input('content')
-        ]);
-
-        return redirect()->back()->with('success', 'Balasan berhasil ditambahkan!');
+        return view('mentor.materials.edit', compact('material'));
     }
 }

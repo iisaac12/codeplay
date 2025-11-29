@@ -12,15 +12,9 @@
 <body class="bg-light">
   <header class="app-header">
     <div class="container app-header-inner">
-<<<<<<< HEAD:resources/views/materialUser.blade.php
-     <a href="{{ route('dashboard.user') }}">
-        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
-        <span class="brand-name">CodePlay</span>
-=======
       <a href="{{ route('user.dashboard') }}" class="brand">
       <img src="{{ asset('assets/logo.svg') }}" class="logo">
      <span class="brand-name">CodePlay</span>
->>>>>>> 94f089fb40ccd3aac10a27c4728e8d06318f7db1:resources/views/materials/index.blade.php
       </a>
       <nav class="app-nav">
         <a href="{{ route('user.dashboard') }}" class="nav-link">Courses</a>

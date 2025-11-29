@@ -65,8 +65,12 @@ Route::middleware('auth')->group(function () {
     // Mentor Routes
     Route::prefix('mentor')->name('mentor.')->middleware('role:mentor')->group(function () {
         Route::get('/dashboard', [MentorController::class, 'dashboard'])->name('dashboard');
-        Route::get('/course/{id}/material/create', [MentorController::class, 'createMaterial'])->name('material.create');
-        Route::post('/course/{id}/material', [MentorController::class, 'storeMaterial'])->name('material.store');
+    // Material Management
+    Route::post('/material', [MentorController::class, 'storeMaterial'])->name('material.store');
+    Route::get('/material/{id}/edit', [MentorController::class, 'editMaterial'])->name('material.edit');
+    Route::delete('/material/{id}', [MentorController::class, 'deleteMaterial'])->name('material.delete');
+    Route::get('/course/{id}/material/create', [MentorController::class, 'createMaterial'])->name('material.create');
+    Route::post('/course/{id}/material', [MentorController::class, 'storeMaterial'])->name('material.store');
         
         // Mentor Forum
         Route::get('/forum', [MentorController::class, 'forumIndex'])->name('forum.index');
