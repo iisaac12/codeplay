@@ -23,7 +23,7 @@ class AdminLog extends Model
         'created_at' => 'datetime',
     ];
 
-    // Relationships
+    
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_id', 'user_id');

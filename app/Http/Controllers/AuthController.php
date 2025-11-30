@@ -1,8 +1,5 @@
 <?php
 
-// ============================================
-// app/Http/Controllers/AuthController.php
-// ============================================
 
 namespace App\Http\Controllers;
 
@@ -18,13 +15,11 @@ use App\Mail\VerificationEmail;
 
 class AuthController extends Controller
 {
-    // Tampilkan form registrasi
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Proses registrasi
     public function register(Request $request)
     {
         $request->validate([
@@ -35,7 +30,6 @@ class AuthController extends Controller
             'role' => 'required|in:pelajar,mentor'
         ]);
 
-        // Buat user baru
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -50,13 +44,11 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
     }
 
-    // Tampilkan form login
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
         $request->validate([
@@ -76,7 +68,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Redirect berdasarkan role
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isMentor()) {
@@ -85,7 +76,6 @@ class AuthController extends Controller
             return redirect()->route('user.dashboard');
         }
     }
-    // Logout
     public function logout()
     {
         Auth::logout();

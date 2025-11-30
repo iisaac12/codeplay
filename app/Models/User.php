@@ -34,13 +34,13 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
-    // Override password untuk Auth
+
     public function getAuthPassword()
     {
         return $this->password_hash;
     }
 
-    // Relationships
+
     public function enrollments()
     {
         return $this->hasMany(UserEnrollment::class, 'user_id', 'user_id');
@@ -76,7 +76,7 @@ class User extends Authenticatable
         return $this->hasMany(Download::class, 'user_id', 'user_id');
     }
 
-    // Helper method untuk cek role
+
     public function isMentor()
     {
         return $this->role === 'mentor';

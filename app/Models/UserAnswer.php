@@ -8,7 +8,7 @@ class UserAnswer extends Model
 {
     protected $table = 'user_answers';
     protected $primaryKey = 'answer_id';
-    public $timestamps = false; // Karena di DB cuma ada answered_at
+    public $timestamps = false;
 
     protected $fillable = [
         'attempt_id',

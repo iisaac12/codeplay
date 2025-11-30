@@ -15,7 +15,6 @@ class DashboardController extends Controller
         $user = Auth::user();
         if (!$user) return redirect()->route('login');
 
-        // Redirect logic based on role...
         switch ($user->role) {
             case 'admin': return redirect()->route('admin.dashboard');
             case 'mentor': return redirect()->route('mentor.dashboard');
@@ -31,7 +30,6 @@ class DashboardController extends Controller
             return redirect()->route('login');
         }
 
-        // Query Course (Filter & Search)
         $query = Course::where('is_published', true)
                        ->where('is_verified', true)
                        ->with('mentor', 'category');
@@ -51,14 +49,10 @@ class DashboardController extends Controller
         $courses = $query->paginate(12);
         $categories = Category::all();
 
-        // --- PERBAIKAN DI SINI ---
-        // Kita ambil data enrollment lengkap, lalu index-kan berdasarkan course_id
-        // Supaya di view nanti bisa dipanggil: $enrollments[course_id]->progress_percentage
         $enrollments = UserEnrollment::where('user_id', $user->user_id)
             ->get()
             ->keyBy('course_id');
 
-        // Kirim variabel $enrollments ke view (bukan $enrolledCourseIds lagi)
         return view('user.dashboard', compact('user', 'courses', 'categories', 'enrollments'));
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $table = 'questions';
-    protected $primaryKey = 'question_id'; // Kunci utama agar relasi terbaca
+    protected $primaryKey = 'question_id';
     
     public $timestamps = false;
 
@@ -23,7 +23,7 @@ class Question extends Model
         'created_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function quiz()
     {
         return $this->belongsTo(Quiz::class, 'quiz_id', 'quiz_id');
@@ -31,7 +31,7 @@ class Question extends Model
 
     public function options()
     {
-        // Relasi ke opsi jawaban, diurutkan biar A, B, C, D rapi
+
         return $this->hasMany(QuestionOption::class, 'question_id', 'question_id')
                     ->orderBy('order_index');
     }

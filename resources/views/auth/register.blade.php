@@ -19,7 +19,6 @@
       <h1 class="h2">Create your account</h1>
       <p class="text-muted mb-24">Start learning to code today.</p>
 
-      {{-- Tampilkan Error Validasi --}}
       @if($errors->any())
         <div class="alert alert-danger" style="color: red; margin-bottom: 15px;">
             <ul style="padding-left: 20px;">
@@ -30,21 +29,16 @@
         </div>
       @endif
 
-      {{-- FORM ACTION & METHOD --}}
       <form action="{{ route('register') }}" method="POST">
-        @csrf {{-- WAJIB: Token Keamanan --}}
 
-        {{-- 1. Full Name --}}
         <div class="form-control">
           <label for="full_name">Full Name</label>
           <div class="input-with-icon">
             <i class="fa-solid fa-user input-icon"></i>
-            {{-- name harus "full_name" sesuai controller --}}
             <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}" placeholder="Your full name" required />
           </div>
         </div>
 
-        {{-- 2. Username (Tadi belum ada) --}}
         <div class="form-control">
             <label for="username">Username</label>
             <div class="input-with-icon">
@@ -53,7 +47,6 @@
             </div>
         </div>
 
-        {{-- 3. Email --}}
         <div class="form-control">
           <label for="email">Email</label>
           <div class="input-with-icon">
@@ -62,7 +55,6 @@
           </div>
         </div>
 
-        {{-- 4. Password --}}
         <div class="form-control">
           <label for="password">Password</label>
           <div class="input-with-icon">
@@ -71,7 +63,6 @@
           </div>
         </div>
 
-        {{-- 5. Confirm Password (WAJIB karena controller pakai rule 'confirmed') --}}
         <div class="form-control">
             <label for="password_confirmation">Confirm Password</label>
             <div class="input-with-icon">
@@ -80,8 +71,6 @@
             </div>
         </div>
 
-        {{-- 6. Role (Hidden atau Select) --}}
-        {{-- Kita set default 'pelajar' biar user ga bingung --}}
         <input type="hidden" name="role" value="pelajar">
 
         <button type="submit" class="btn btn-primary w-100">Register</button>
@@ -92,7 +81,6 @@
       </form>
     </section>
 
-    {{-- Bagian Gambar --}}
     <section class="auth-visual">
       <div class="illustration card card-elevated">
         <i class="fa-solid fa-laptop-code illu-icon"></i>
@@ -102,8 +90,6 @@
     </section>
   </main>
 
-  {{-- Matikan JS validation biar Laravel yang kerja --}}
-  {{-- <script src="{{ asset('assets/js/validation.js') }}"></script> --}}
 
 </body>
 </html>

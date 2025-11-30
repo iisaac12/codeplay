@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/AdminController.php
 
 namespace App\Http\Controllers;
 
@@ -11,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    // Dashboard admin
     public function dashboard()
     {
         $pendingUsers = User::where('is_verified', false)->count();
@@ -19,12 +17,10 @@ class AdminController extends Controller
         $totalUsers = User::count();
         $totalCourses = Course::count();
 
-        // Get all users with enrollments count
         $users = User::withCount('enrollments')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Get all courses with mentor, category, enrollments
         $courses = Course::with(['mentor', 'category'])
             ->withCount('enrollments')
             ->orderBy('created_at', 'desc')
@@ -40,14 +36,12 @@ class AdminController extends Controller
         ));
     }
 
-    // Verifikasi user
     public function verifyUser($userId)
     {
         $user = User::findOrFail($userId);
         $user->is_verified = true;
         $user->save();
 
-        // Log activity
         AdminLog::create([
             'admin_id' => Auth::id(),
             'action' => 'verify_user',
@@ -59,14 +53,12 @@ class AdminController extends Controller
         return redirect()->back()->with('success', "User {$user->full_name} berhasil diverifikasi!");
     }
 
-    // Verifikasi course
     public function verifyCourse($courseId)
     {
         $course = Course::findOrFail($courseId);
         $course->is_verified = true;
         $course->save();
 
-        // Log activity
         AdminLog::create([
             'admin_id' => Auth::id(),
             'action' => 'verify_course',
@@ -78,12 +70,10 @@ class AdminController extends Controller
         return redirect()->back()->with('success', "Kursus {$course->title} berhasil diverifikasi!");
     }
 
-    // Delete user
     public function deleteUser($userId)
     {
         $user = User::findOrFail($userId);
         
-        // Prevent deleting yourself
         if ($userId == Auth::id()) {
             return redirect()->back()->with('error', 'Tidak bisa menghapus akun sendiri!');
         }
@@ -91,7 +81,6 @@ class AdminController extends Controller
         $userName = $user->full_name;
         $user->delete();
 
-        // Log activity
         AdminLog::create([
             'admin_id' => Auth::id(),
             'action' => 'delete_user',
@@ -103,14 +92,12 @@ class AdminController extends Controller
         return redirect()->back()->with('success', "User {$userName} berhasil dihapus!");
     }
 
-    // Delete course
     public function deleteCourse($courseId)
     {
         $course = Course::findOrFail($courseId);
         $courseTitle = $course->title;
         $course->delete();
 
-        // Log activity
         AdminLog::create([
             'admin_id' => Auth::id(),
             'action' => 'delete_course',

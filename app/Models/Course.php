@@ -28,7 +28,7 @@ class Course extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');

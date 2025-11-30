@@ -12,14 +12,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
-    /* Style sama persis dengan learn.blade.php */
     .learn-grid { display: grid; grid-template-columns: 350px 1fr; gap: 24px; margin-top: 24px; align-items: start; }
     .curriculum-card { max-height: calc(100vh - 100px); overflow-y: auto; position: sticky; top: 24px; }
     .lesson-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid transparent; margin-bottom: 4px; }
     .lesson-item:hover { background-color: #F9FAFB; }
     .lesson-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #EEF2F6; border-radius: 6px; color: var(--text-muted); font-size: 14px; }
     
-    /* Highlight materi yang sedang dibuka */
     .lesson-item.active { background-color: #EFF6FF; border-color: #0056D2; }
     .lesson-item.active .lesson-icon { background-color: #0056D2; color: white; }
 
@@ -31,7 +29,6 @@
 </head>
 <body class="bg-light">
 
-  {{-- HEADER --}}
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="{{ route('user.dashboard') }}" class="brand">
@@ -39,7 +36,6 @@
         <span class="brand-name">CodePlay</span>
       </a>
       <div class="nav">
-        {{-- Tombol kembali ke halaman depan course --}}
         <a href="{{ route('course.show', $course->slug) }}" class="btn btn-ghost btn-sm">
             <i class="fa-solid fa-arrow-left me-2"></i> Back to Course Home
         </a>
@@ -50,11 +46,9 @@
   <main class="container mb-24">
     <div class="learn-grid">
 
-        {{-- SIDEBAR: DAFTAR ISI (CURRICULUM) --}}
         <aside class="curriculum-card card card-elevated">
             <h3 class="h3 mb-16">Curriculum</h3>
             
-            {{-- Loop Materi --}}
             <div class="module-title"><i class="fa-solid fa-book me-2"></i> Materials</div>
             @foreach($course->materials as $item)
                 <a href="{{ route('materials.show', $item->material_id) }}" 
@@ -69,7 +63,6 @@
                         <small class="text-muted">{{ $item->duration ? $item->duration . ' min' : 'Read' }}</small>
                     </div>
                     
-                    {{-- Indikator Centang Jika Selesai (Opsional, perlu cek progress) --}}
                     @if($item->material_id == $material->material_id)
                         <i class="fa-solid fa-circle-play text-primary"></i>
                     @endif
@@ -78,20 +71,14 @@
             
         </aside>
 
-        {{-- AREA KONTEN UTAMA --}}
         <section class="content-area">
             <div class="card card-elevated p-0 overflow-hidden">
                 
-                {{-- LOGIKA TAMPILAN KONTEN BERDASARKAN TIPE --}}
-                
-                {{-- 1. JIKA VIDEO --}}
                 @if($material->type == 'video')
                     <div class="video-wrapper">
-                        {{-- Cek apakah file lokal atau link youtube --}}
                         @if(Str::contains($material->file_url, ['youtube.com', 'youtu.be']))
                             <iframe src="{{ $material->file_url }}" allowfullscreen></iframe>
                         @else
-                            {{-- Video Lokal (Storage) --}}
                             <video controls>
                                 <source src="{{ asset('storage/' . $material->file_url) }}" type="video/mp4">
                                 Browser Anda tidak mendukung video.
@@ -109,7 +96,6 @@
 
                     @else
                     <div class="p-5">
-                        {{-- Menampilkan Gambar Cover jika ada --}}
                         @if($material->file_url && !Str::endsWith($material->file_url, '.pdf'))
                             <img src="{{ asset('storage/' . $material->file_url) }}" class="w-100 rounded mb-4">
                         @endif
@@ -120,7 +106,6 @@
                     </div>
                 @endif
 
-                {{-- BAGIAN BAWAH KONTEN (JUDUL & NAVIGASI) --}}
                 <div class="p-4 border-top">
                     <h1 class="h2">{{ $material->title }}</h1>
                     <p class="text-muted">{{ $material->description ?? 'Pelajari materi ini dengan seksama.' }}</p>
@@ -128,7 +113,6 @@
                     <div class="d-flex justify-content-between mt-4">
                         <button class="btn btn-outline" disabled>Previous Lesson</button>
                         
-                        <!-- FORM MARK AS COMPLETED -->
                         <form action="{{ route('material.progress', $material->material_id) }}" method="POST">
                             @csrf
                             <input type="hidden" name="completed" value="1">
@@ -147,10 +131,8 @@
     </div>
   </main>
 
-  <!-- 2. Tambahkan JS SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- 3. Script untuk menangkap Session Success dari Controller -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         const successMessage = {!! json_encode(session('success')) !!};
@@ -159,11 +141,11 @@
         if (successMessage) {
             Swal.fire({
                 title: 'Good Job! 🎉',
-                text: successMessage, // Pesan dari controller
+                text: successMessage, 
                 icon: 'success',
                 confirmButtonText: 'Lanjut',
-                confirmButtonColor: '#3b82f6', // Sesuaikan warna primary kamu
-                timer: 3000, // Otomatis tutup dalam 3 detik (opsional)
+                confirmButtonColor: '#3b82f6', 
+                timer: 3000, 
                 timerProgressBar: true
             });
         }

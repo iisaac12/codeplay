@@ -8,8 +8,7 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <!-- Header -->
-    <header class="app-header">
+        <header class="app-header">
         <div class="container">
             <div class="app-header-inner">
                 <div class="brand">
@@ -29,21 +28,17 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main style="background: var(--bg); min-height: calc(100vh - 80px); padding: 32px 0;">
+        <main style="background: var(--bg); min-height: calc(100vh - 80px); padding: 32px 0;">
         <div class="container">
-            <!-- Page Title -->
-            <div class="welcome">
+                        <div class="welcome">
                 <div>
                     <h1 class="h2">Dashboard Admin</h1>
                     <p class="text-muted">Lanjutkan perjalanan belajar coding Anda hari ini</p>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
-                <!-- Total Pengguna -->
-                <div class="card card-elevated">
+                        <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                                <div class="card card-elevated">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <span style="font-size: 32px;">👥</span>
                         <div>
@@ -53,8 +48,7 @@
                     </div>
                 </div>
 
-                <!-- Terverifikasi -->
-                <div class="card card-elevated">
+                                <div class="card card-elevated">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <span style="font-size: 32px; color: var(--success);">✓</span>
                         <div>
@@ -64,8 +58,7 @@
                     </div>
                 </div>
 
-                <!-- Total Kursus -->
-                <div class="card card-elevated">
+                                <div class="card card-elevated">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <span style="font-size: 32px;">📚</span>
                         <div>
@@ -75,8 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Pending Review -->
-                <div class="card card-elevated">
+                                <div class="card card-elevated">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <span style="font-size: 32px; color: var(--danger);">⊗</span>
                         <div>
@@ -87,16 +79,14 @@
                 </div>
             </div>
 
-            <!-- Search Bar -->
-            <div style="margin: 24px 0;">
+                        <div style="margin: 24px 0;">
                 <div class="input-with-icon">
                     <span class="input-icon">🔍</span>
                     <input type="text" placeholder="Cari Pengguna atau kursus..." id="searchInput">
                 </div>
             </div>
 
-            <!-- Tabs -->
-            <div style="display: flex; gap: 16px; border-bottom: 2px solid #E5E7EB; margin-bottom: 24px;">
+                        <div style="display: flex; gap: 16px; border-bottom: 2px solid #E5E7EB; margin-bottom: 24px;">
                 <button class="btn-ghost" id="tabUsers" style="border-bottom: 3px solid var(--primary); padding-bottom: 12px; font-weight: 700;">
                     Manajemen Pengguna
                 </button>
@@ -189,8 +179,7 @@
                 </div>
             </div>
 
-            <!-- Courses Table (Hidden by default) -->
-            <div id="coursesSection" style="display: none;">
+                        <div id="coursesSection" style="display: none;">
                 <div class="card card-elevated">
                     <div class="card-header">
                         <h3 class="h4">Daftar Kursus</h3>
@@ -270,8 +259,7 @@
         </div>
     </main>
 
-    <!-- Confirmation Modal -->
-    <div class="modal" id="confirmModal">
+        <div class="modal" id="confirmModal">
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="h4">Konfirmasi Hapus</h3>
@@ -293,14 +281,13 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
+        <div class="toast" id="toast">
         <span>✓</span>
         <span id="toastMessage">Aksi berhasil dilakukan!</span>
     </div>
 
     <script>
-        // Tab Switching
+
         const tabUsers = document.getElementById('tabUsers');
         const tabCourses = document.getElementById('tabCourses');
         const usersSection = document.getElementById('usersSection');
@@ -324,7 +311,7 @@
             usersSection.style.display = 'none';
         });
 
-        // Search functionality
+
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
@@ -339,7 +326,7 @@
             });
         });
 
-        // Confirmation Modal
+
         function confirmDelete(url, name) {
     const modal = document.getElementById('confirmModal');
     const itemName = document.getElementById('itemName');
@@ -356,7 +343,7 @@
             document.getElementById('confirmModal').classList.remove('open');
         }
 
-        // Toast notification
+
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
@@ -367,7 +354,7 @@
             }, 3000);
         }
 
-        // Show toast if there's a success message from Laravel
+
         @if(session('success'))
             showToast("{{ session('success') }}");
         @endif

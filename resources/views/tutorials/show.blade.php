@@ -73,7 +73,7 @@
                 </div>
             </div>
             
-            <!-- Logic: Cari Quiz yang berhubungan dengan Course ini -->
+
             @php
                 $relatedQuiz = \App\Models\Quiz::where('course_id', $step->tutorial->course_id)->first();
             @endphp
@@ -234,7 +234,7 @@
               Gunakan kode di bawah ini sebagai referensi belajar jika Anda mengalami kesulitan.
           </p>
 
-          <!-- Code Block Solusi -->
+          
           <pre class="code-block">{{ $step->solution_code }}</pre>
 
           <div style="text-align: right; margin-top: 24px;">
@@ -248,7 +248,7 @@
   </main>
 
   <script>
-    // Tab indent handler
+    
     document.querySelector('textarea').addEventListener('keydown', function(e) {
       if (e.key == 'Tab') {
         e.preventDefault();
@@ -268,14 +268,14 @@
         modal.classList.remove('open');
     }
 
-    // Klik di luar modal buat nutup
+    
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             closeSolution();
         }
     });
 
-    // Fitur Copy Code
+    
     function copySolution() {
         const code = document.querySelector('.code-block').innerText;
         navigator.clipboard.writeText(code).then(() => {

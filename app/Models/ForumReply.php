@@ -22,7 +22,7 @@ class ForumReply extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function thread()
     {
         return $this->belongsTo(ForumThread::class, 'thread_id', 'thread_id');

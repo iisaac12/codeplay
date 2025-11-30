@@ -36,33 +36,33 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi input
+
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'password' => 'nullable|min:6|confirmed', // password_confirmation wajib jika password diisi
+            'password' => 'nullable|min:6|confirmed',
         ]);
 
-        // 1. Update Data Dasar
+
         $user->full_name = $request->full_name;
         $user->email = $request->email;
 
-        // 2. Update Password (Jika diisi)
+
         if ($request->filled('password')) {
             $user->password_hash = Hash::make($request->password);
         }
 
-        // 3. Update Avatar (Jika ada upload file)
+
         if ($request->hasFile('avatar')) {
-            // Hapus avatar lama jika bukan default/url eksternal
+
             if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
                 Storage::disk('public')->delete($user->avatar_url);
             }
 
-            // Simpan yang baru
+
             $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar_url = $path; // Simpan path-nya saja (misal: avatars/foto.jpg)
+            $user->avatar_url = $path;
         }
 
         $user->save();

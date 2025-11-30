@@ -8,14 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
-    // Detail kursus
     public function show($slug)
     {
         $course = Course::where('slug', $slug)
             ->with(['mentor', 'category', 'materials', 'tutorials', 'quizzes'])
             ->firstOrFail();
 
-        // Check if user enrolled
         $isEnrolled = false;
         $enrollment = null;
         if (Auth::check()) {
@@ -28,7 +26,6 @@ class CourseController extends Controller
         return view('courses.show', compact('course', 'isEnrolled', 'enrollment'));
     }
 
-    // Enroll ke kursus
     public function enroll($courseId)
     {
         $enrollment = UserEnrollment::firstOrCreate([
@@ -39,14 +36,12 @@ class CourseController extends Controller
         return redirect()->back()->with('success', 'Berhasil mendaftar ke kursus!');
     }
 
-    // Learning page
     public function learn($slug)
     {
         $course = Course::where('slug', $slug)
             ->with(['materials', 'tutorials.steps', 'quizzes.questions'])
             ->firstOrFail();
 
-        // Check enrollment
         $enrollment = UserEnrollment::where('user_id', Auth::id())
             ->where('course_id', $course->course_id)
             ->firstOrFail();

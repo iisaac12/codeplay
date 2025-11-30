@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Verify your email — LearnCode</title>
   
-  {{-- Gunakan Vite untuk meload CSS/JS utama --}}
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-  {{-- Jika masih pakai CSS manual di folder public/assets --}}
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" />
@@ -31,16 +29,8 @@
       </p>
       
       <div class="verify-actions d-flex flex-column gap-2 justify-content-center">
-        {{-- Tombol Buka Aplikasi Email --}}
         <a href="mailto:" class="btn btn-primary w-100 mb-2">Open email app</a>
         
-        {{-- Tombol Resend (Sementara dimatikan atau arahkan ke # dulu karena belum ada fungsi resend) --}}
-        {{-- <form action="#" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-outline w-100">Resend email</button>
-        </form> --}}
-        
-        {{-- Tombol Balik ke Login --}}
         <a href="{{ route('login') }}" class="btn btn-outline-secondary w-100 mt-2" style="text-decoration: none; color: gray;">
             Back to Login
         </a>

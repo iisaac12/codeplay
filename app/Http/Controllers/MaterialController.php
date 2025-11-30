@@ -17,27 +17,27 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        $user = Auth::user(); // <--- TAMBAHKAN INI
-        $userId = $user->user_id; // Atau Auth::id()
+        $user = Auth::user();
+        $userId = $user->user_id;
 
-        // 1. Ambil daftar ID kursus yang diikuti user saat ini
+
         $enrolledCourseIds = UserEnrollment::where('user_id', $userId)
             ->pluck('course_id');
 
-        // 2. Ambil materi yang course_id-nya ada di daftar enrollment tersebut
+
         $materials = CourseMaterial::whereIn('course_id', $enrolledCourseIds)
             ->with('course') 
             ->orderBy('created_at', 'desc') 
             ->paginate(10); 
 
-        // Jangan lupa kirim 'user' ke view
+
         return view('materials.index', compact('materials', 'user'));
     }
     
-    // Tampilkan detail materi
+
     public function show($materialId)
     {
-        $user = Auth::user(); // <--- Tambahkan ini juga biar aman
+        $user = Auth::user();
 
         $material = CourseMaterial::where('material_id', $materialId)->firstOrFail();
         $course = $material->course;
@@ -53,11 +53,11 @@ class MaterialController extends Controller
             'material_id' => $materialId
         ]);
 
-        // Kirim 'user' ke view
+
         return view('materials.show', compact('material', 'course', 'enrollment', 'progress', 'user'));
     }
 
-    // Update progress materi (Mark as Completed)
+
     public function updateProgress(Request $request, $materialId)
     {
         $progress = MaterialProgress::firstOrCreate([
@@ -79,12 +79,12 @@ class MaterialController extends Controller
         return redirect()->back()->with('success', 'Materi berhasil diselesaikan! Progres tersimpan.');
     }
 
-    // Download file materi
+
     public function download($materialId)
     {
         $material = CourseMaterial::findOrFail($materialId);
 
-        // Cek tipe materi: Jika text atau code, tolak download
+
         if (in_array($material->type, ['text', 'code'])) {
             return redirect()->back()->with('error', 'Materi bertipe Teks atau Kode tidak dapat diunduh.');
         }
@@ -94,7 +94,7 @@ class MaterialController extends Controller
             'material_id' => $materialId
         ]);
 
-        // Cek file
+
         if (Storage::disk('public')->exists($material->file_url)) {
              return Storage::disk('public')->download($material->file_url);
         }
@@ -107,7 +107,7 @@ class MaterialController extends Controller
         return redirect()->back()->with('error', 'Maaf, file fisik tidak ditemukan di server.');
     }
 
-    // Stream PDF
+
     public function streamPdf($id)
     {
         $material = \App\Models\CourseMaterial::findOrFail($id);
@@ -125,7 +125,7 @@ class MaterialController extends Controller
         return abort(404, 'File PDF tidak ditemukan');
     }
 
-    // Helper
+
     private function updateEnrollmentProgress($materialId)
     {
         $material = CourseMaterial::findOrFail($materialId);

@@ -12,10 +12,10 @@ class ProgressController extends Controller
 {
     public function index()
     {
-        $user = Auth::user(); // <--- TAMBAHKAN INI (Ambil data user lengkap)
-        $userId = $user->user_id; // Gunakan ID dari objek user
+        $user = Auth::user();
+        $userId = $user->user_id;
 
-        // 1. Statistik Kartu Atas
+
         $completedCourses = UserEnrollment::where('user_id', $userId)
             ->where(function($q) {
                 $q->whereNotNull('completed_at')
@@ -23,7 +23,7 @@ class ProgressController extends Controller
             })
             ->count();
 
-        // Hitung Rata-rata Skor Kuis
+
         $attempts = QuizAttempt::where('user_id', $userId)->get();
         $totalPercentage = 0;
         $attemptCount = $attempts->count();
@@ -39,14 +39,14 @@ class ProgressController extends Controller
             $averageScore = 0;
         }
 
-        // Hitung Streak
+
         $streak = $this->calculateStreak($userId);
 
-        // 2. Data Grafik Lingkaran
+
         $totalEnrolled = UserEnrollment::where('user_id', $userId)->count();
         $completionRate = $totalEnrolled > 0 ? round(($completedCourses / $totalEnrolled) * 100) : 0;
 
-        // 3. Data Grafik Batang
+
         $recentAttempts = QuizAttempt::with('quiz')
             ->where('user_id', $userId)
             ->orderBy('started_at', 'desc')
@@ -54,9 +54,9 @@ class ProgressController extends Controller
             ->get()
             ->reverse();
 
-        // Kirim $user ke view
+
         return view('progress.index', compact(
-            'user', // <--- PENTING: Kirim variabel user
+            'user',
             'completedCourses', 
             'averageScore', 
             'streak', 

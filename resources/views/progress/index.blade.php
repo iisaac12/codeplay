@@ -11,7 +11,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
     
-    /* === HEADER (Sama seperti layout lain) === */
+
     .app-header { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
@@ -27,31 +27,31 @@
     .profile-info .role { font-size: 11px; color: #64748b; font-weight: 500; }
     .avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e2e8f0; padding: 2px; }
 
-    /* === STATS GRID === */
+    
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin: 40px 0; }
     .card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; }
     .stat-card h3 { font-size: 14px; color: #64748b; font-weight: 500; margin-bottom: 8px; }
     .stat-number { font-size: 32px; font-weight: 800; color: #1e293b; }
 
-    /* === CHARTS GRID === */
+    
     .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px; }
     .chart-card h3 { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 24px; }
     
-    /* Pie Chart CSS Only */
+    
     .pie {
       width: 120px; height: 120px; border-radius: 50%; margin: 0 auto;
       background: conic-gradient(var(--c) calc(var(--p)*1%), #f1f5f9 0);
       position: relative; display: flex; align-items: center; justify-content: center;
     }
     .pie::after {
-      content: attr(data-text); /* Tampilkan angka di tengah */
+      content: attr(data-text); 
       position: absolute; background: white; width: 90px; height: 90px;
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: 20px; color: #1e293b;
     }
     .mt-8 { margin-top: 16px; text-align: center; font-size: 14px; }
 
-    /* Bar Chart CSS Only */
+    
     .bars { display: flex; align-items: flex-end; justify-content: space-between; height: 150px; gap: 8px; padding-top: 20px; }
     .bar { 
       flex: 1; background: #eff6ff; border-radius: 6px; position: relative; 
@@ -61,7 +61,7 @@
       background: #3b82f6; width: 100%; border-radius: 6px; position: absolute; bottom: 0;
       transition: height 1s ease;
     }
-    /* Tooltip sederhana saat hover bar */
+    
     .bar:hover::after {
       content: attr(data-label) " (" attr(data-value) "%)";
       position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
@@ -69,7 +69,7 @@
       font-size: 10px; white-space: nowrap; z-index: 10;
     }
 
-    /* Illustration Card */
+    
     .illu-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #f0fdf4; border-color: #bbf7d0; }
     .illu-icon { font-size: 48px; color: #16a34a; margin-bottom: 16px; }
     
@@ -114,7 +114,6 @@
 
   <main class="container">
     
-    <!-- STATS KARTU ATAS -->
     <section class="stats-grid">
       <div class="card stat-card">
         <h3>Courses completed</h3>
@@ -130,14 +129,15 @@
       </div>
     </section>
 
-    <!-- CHART GRID -->
     <section class="charts-grid">
       
-      <!-- 1. Pie Chart: Course Completion -->
-      <div class="card chart-card">
+
+    <div class="card chart-card">
         <h3>Course completion</h3>
-        <!-- Variable --p diisi dari controller ($completionRate) -->
-        <!-- data-text untuk menampilkan angka di tengah lingkaran -->
+
+
+
+
         <div class="pie" style="--p:{{ $completionRate }}; --c:#12B76A;" data-text="{{ $completionRate }}%"></div>
         
         <p class="text-muted mt-8">
@@ -145,25 +145,25 @@
         </p>
       </div>
 
-      <!-- 2. Bar Chart: Recent Quiz Scores -->
+      
       <div class="card chart-card">
         <h3>Recent quiz scores</h3>
         <div class="bars">
           @if($recentAttempts->count() > 0)
               @foreach($recentAttempts as $attempt)
                   @php
-                      // Hitung persentase skor
+                      
                       $percent = $attempt->max_score > 0 ? round(($attempt->score / $attempt->max_score) * 100) : 0;
-                      // Tentukan warna (Merah jika < 70, Biru jika >= 70)
+                      
                       $color = $percent >= 70 ? '#3b82f6' : '#ef4444';
                   @endphp
-                  <!-- Atribut data-label untuk tooltip saat hover -->
+                  
                   <div class="bar" data-label="{{ Str::limit($attempt->quiz->title, 10) }}" data-value="{{ $percent }}">
                       <div class="bar-fill" style="height: {{ $percent }}%; background: {{ $color }};"></div>
                   </div>
               @endforeach
               
-              <!-- Placeholder jika data kurang dari 5 agar grafik tetap rapi -->
+              
               @for($i = 0; $i < (5 - $recentAttempts->count()); $i++)
                   <div class="bar"><div class="bar-fill" style="height: 0%;"></div></div>
               @endfor
@@ -173,7 +173,7 @@
         </div>
       </div>
 
-      <!-- 3. Illustration Card -->
+      
       <div class="card chart-card illu-card">
         <div class="illustration">
           <i class="fa-solid fa-graduation-cap illu-icon"></i>

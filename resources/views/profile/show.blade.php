@@ -17,7 +17,6 @@
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .brand { text-decoration: none; color: #1e293b; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
     
-    /* Profile Card */
     .profile-card {
         background: white; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         border: 1px solid #e2e8f0; overflow: hidden; max-width: 600px; margin: 40px auto;
@@ -58,7 +57,6 @@
     .info-label { color: #64748b; font-size: 14px; font-weight: 500; }
     .info-value { color: #1e293b; font-weight: 600; font-size: 14px; }
 
-    /* Buttons */
     .action-buttons { display: flex; gap: 12px; justify-content: center; padding: 0 32px; }
     
     .btn { 
@@ -100,7 +98,6 @@
         
         <div class="profile-header-bg">
             <div class="profile-avatar-wrapper">
-                {{-- Logic Avatar: Cek storage, kalau ga ada pakai UI Avatars --}}
                 @php
                     $avatarSrc = $user->avatar_url && file_exists(storage_path('app/public/' . $user->avatar_url)) 
                         ? asset('storage/' . $user->avatar_url) 
@@ -132,12 +129,10 @@
         </div>
 
         <div class="action-buttons">
-            <!-- Tombol Edit Profil -->
             <a href="{{ route('profile.edit') }}" class="btn btn-edit">
                 <i class="fa-solid fa-pen-to-square"></i> Edit Profil
             </a>
 
-            <!-- Tombol Logout -->
             <form action="{{ route('logout') }}" method="POST" style="flex: 1;">
                 @csrf
                 <button type="submit" class="btn btn-logout" style="width: 100%;" onclick="return confirm('Yakin ingin keluar?')">
@@ -152,7 +147,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
-  {{-- Notifikasi Sukses Update Profil --}}
   @if(session('success'))
   <script>
     Swal.fire({

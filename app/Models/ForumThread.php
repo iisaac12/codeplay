@@ -26,7 +26,7 @@ class ForumThread extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function course()
     {
         return $this->belongsTo(Course::class, 'course_id', 'course_id');

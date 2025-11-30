@@ -50,19 +50,16 @@
             @csrf
             @method('PUT')
 
-            <!-- Nama Lengkap -->
             <div class="form-group">
                 <label class="form-label">Nama Lengkap</label>
                 <input type="text" name="full_name" class="form-input" value="{{ old('full_name', $user->full_name) }}" required>
             </div>
 
-            <!-- Email -->
             <div class="form-group">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required>
             </div>
 
-            <!-- Avatar -->
             <div class="form-group">
                 <label class="form-label">Foto Profil</label>
                 <div class="file-input-wrapper">
@@ -79,13 +76,11 @@
             <hr style="border:0; border-top:1px solid #f1f5f9; margin: 24px 0;">
             <p style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;">Biarkan kosong jika tidak ingin mengganti password.</p>
 
-            <!-- Password Baru -->
             <div class="form-group">
                 <label class="form-label">Password Baru</label>
                 <input type="password" name="password" class="form-input" placeholder="Minimal 6 karakter">
             </div>
 
-            <!-- Konfirmasi Password -->
             <div class="form-group">
                 <label class="form-label">Konfirmasi Password</label>
                 <input type="password" name="password_confirmation" class="form-input" placeholder="Ulangi password baru">
@@ -98,7 +93,6 @@
   </main>
 
   <script>
-    // Script simple buat preview gambar pas diupload
     function previewImage(event) {
         var reader = new FileReader();
         reader.onload = function(){

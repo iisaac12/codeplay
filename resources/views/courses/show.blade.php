@@ -50,7 +50,6 @@
             </div>
         </div>
 
-        {{-- KOLOM KANAN: KARTU AKSES (TOMBOL ENROLL DISINI) --}}
         <div class="right-sidebar">
             <div class="card card-elevated" style="position: sticky; top: 24px;">
           <img 
@@ -60,17 +59,14 @@
               style="width: 100%; height: 160px; object-fit: cover;"
           />
 
-                {{-- LOGIKA TOMBOL ENROLL --}}
                 @auth
                     @if(isset($isEnrolled) && $isEnrolled)
-                        {{-- Jika SUDAH Enroll --}}
                         <a href="{{ route('course.learn', $course->slug) }}" class="btn btn-success w-100 btn-lg">
                             Continue Learning
                         </a>
                     @else
-                        {{-- Jika BELUM Enroll -> Form POST ke Route Enroll --}}
                         <form action="{{ route('course.enroll', $course->course_id) }}" method="POST">
-                            @csrf {{-- Token keamanan wajib --}}
+                            @csrf 
                             <button type="submit" class="btn btn-primary w-100 btn-lg">
                                 Enroll Now - Free
                             </button>

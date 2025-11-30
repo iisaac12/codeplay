@@ -97,7 +97,7 @@
             @foreach($materials as $material)
             <li class="material-item">
                 <div class="material-info">
-                    <!-- Icon Logic -->
+                    
                     <div class="material-icon">
                         @if($material->type == 'video')
                             <i class="fa-solid fa-video"></i>
@@ -125,7 +125,7 @@
                         Lihat
                     </a>
                     
-                    <!-- Tombol Download -->
+                    
                     <a href="{{ route('material.download', $material->material_id) }}" class="btn-outline" title="Download Materi">
                         <i class="fa-solid fa-download"></i>
                     </a>
@@ -134,13 +134,13 @@
             @endforeach
         </ul>
 
-        <!-- Pagination -->
+        
         <div style="margin-top: 32px; display: flex; justify-content: center;">
             {{ $materials->links() }}
         </div>
 
     @else
-        <!-- Empty State -->
+        
         <div class="card" style="text-align: center; padding: 60px;">
             <div style="background: #f1f5f9; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
                 <i class="fa-solid fa-folder-open" style="font-size: 32px; color: #94a3b8;"></i>
@@ -173,13 +173,12 @@
             Swal.fire({
                 title: 'Tidak Bisa Download',
                 text: errorMessage,
-                icon: 'warning', // Icon warning lebih cocok untuk ini
+                icon: 'warning', 
                 confirmButtonText: 'Oke',
                 confirmButtonColor: '#f59e0b' 
             });
         }
 
-        // Jika download berhasil (biasanya browser handle sendiri, tapi jaga2 kalau ada success msg)
         if (successMessage) {
             Swal.fire({
                 title: 'Berhasil',

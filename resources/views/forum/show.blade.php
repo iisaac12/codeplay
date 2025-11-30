@@ -8,13 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   
-  <!-- SweetAlert2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
     
-    /* Header Styles */
+    
     .app-header { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
     .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
@@ -23,7 +22,7 @@
     .nav-link { text-decoration: none; color: #64748b; font-weight: 500; font-size: 14px; transition: color 0.2s; }
     .nav-link:hover, .nav-link.active { color: #1e293b; }
 
-    /* Thread Styles */
+    
     .thread-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px; margin-top: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); }
     .thread-header { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9; }
     .thread-title { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 12px; line-height: 1.4; }
@@ -39,7 +38,7 @@
     .tags-wrapper { margin-top: 24px; display: flex; gap: 8px; }
     .category-tag { background: #eff6ff; color: #3b82f6; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; }
 
-    /* Replies Styles */
+    
     .replies-section { margin-top: 40px; margin-bottom: 60px; }
     .section-label { font-size: 14px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
     
@@ -47,7 +46,7 @@
     .reply-card.solution { border: 2px solid #22c55e; background: #f0fdf4; }
     .solution-badge { background: #22c55e; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
 
-    /* Reply Form */
+    
     .reply-form { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 40px; }
     .form-textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 14px; min-height: 120px; margin-bottom: 16px; resize: vertical; outline: none; }
     .form-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
@@ -61,7 +60,6 @@
 </head>
 <body class="bg-light">
 
-  {{-- HEADER --}}
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="{{ route('user.dashboard') }}" class="brand">
@@ -98,15 +96,12 @@
 
   <main class="container">
     
-    <!-- Breadcrumb / Back -->
     <a href="{{ route('forum.index') }}" class="back-link">
         <i class="fa-solid fa-arrow-left"></i> Kembali ke Forum
     </a>
 
-    <!-- 1. THREAD UTAMA (PERTANYAAN) -->
     <article class="thread-card">
         <div class="thread-header">
-            <!-- Tags -->
             @if($thread->course)
                 <div style="margin-bottom: 12px;">
                     <span class="category-tag">{{ $thread->course->category->name ?? 'General' }}</span>
@@ -115,7 +110,6 @@
 
             <h1 class="thread-title">{{ $thread->title }}</h1>
             
-            <!-- User Meta -->
             <div class="user-meta">
 <img 
                 src="{{ $user->avatar_url ? asset('storage/' . $user->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($user->full_name ?? $user->username).'&background=3b82f6&color=fff&bold=true' }}" 
@@ -135,7 +129,6 @@
         </div>
     </article>
 
-    <!-- 2. DAFTAR BALASAN (REPLIES) -->
     <section class="replies-section">
         <div class="section-label">{{ $thread->replies_count }} Balasan</div>
 
@@ -165,7 +158,6 @@
         @endforelse
     </section>
 
-    <!-- 3. FORM BALASAN -->
     @auth
     <section class="reply-form" id="reply-form">
         <h3 class="h5" style="margin-top: 0; margin-bottom: 16px; font-weight: 700; color: #1e293b;">Tulis Balasan</h3>
@@ -185,7 +177,6 @@
 
   </main>
 
-  <!-- SweetAlert & Flash Data -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <div id="flash-data" 
        data-success="{{ session('success') }}" 

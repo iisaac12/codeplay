@@ -11,7 +11,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; }
     
-    /* HEADER */
+
     .quiz-header { 
         background: white; border-bottom: 1px solid #e2e8f0; padding: 0 40px; 
         height: 70px; display: flex; align-items: center; justify-content: space-between; 
@@ -19,17 +19,17 @@
     }
     .brand-logo { font-size: 20px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px; text-decoration: none; }
     
-    /* MAIN CONTAINER */
+    
     .container { max-width: 800px; margin: 40px auto; padding: 0 24px; }
 
-    /* SCORE CARD */
+    
     .score-card { 
         background: white; border-radius: 24px; padding: 40px; text-align: center; 
         border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
         margin-bottom: 32px; overflow: hidden; position: relative;
     }
     
-    /* Status Badge & Icon */
+    
     .result-icon { 
         width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 24px; 
         display: flex; align-items: center; justify-content: center; font-size: 32px; 
@@ -47,7 +47,7 @@
     .pass .status-badge { background: #dcfce7; color: #15803d; }
     .fail .status-badge { background: #fee2e2; color: #b91c1c; }
 
-    /* STATS GRID */
+    
     .stats-grid { 
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; 
         margin-top: 32px; padding-top: 32px; border-top: 1px solid #f1f5f9; 
@@ -56,7 +56,7 @@
     .stat-val { font-weight: 700; font-size: 18px; color: #334155; }
     .stat-lbl { font-size: 12px; color: #94a3b8; margin-top: 4px; }
 
-    /* REVIEW SECTION */
+    
     .section-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
     
     .review-card { 
@@ -77,7 +77,7 @@
     .answer-box.user-wrong { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .answer-box.correct-key { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; margin-top: 8px; }
 
-    /* ACTION BUTTONS */
+    
     .action-bar { display: flex; gap: 16px; margin-top: 40px; justify-content: center; }
     
     .btn { 
@@ -96,7 +96,7 @@
 </head>
 <body>
 
-  <!-- Header -->
+  
   <header class="quiz-header">
     <a href="{{ route('dashboard') }}" class="brand-logo">
       <span style="background: #3b82f6; color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px;">CP</span>
@@ -109,8 +109,8 @@
 
   <main class="container">
     
-    <!-- 1. SCORE CARD -->
-    <!-- Tambahkan class 'pass' atau 'fail' berdasarkan is_passed -->
+    
+    
     <div class="score-card {{ $attempt->is_passed ? 'pass' : 'fail' }}">
         
         <div class="result-icon">
@@ -136,7 +136,7 @@
             @endif
         </p>
 
-        <!-- Statistik -->
+        
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-val">{{ gmdate('i:s', $attempt->time_taken) }}</div>
@@ -157,14 +157,14 @@
         </div>
     </div>
 
-    <!-- 2. ACTION BUTTONS -->
+    
     <div class="action-bar">
-        <!-- Tombol Kembali ke Materi -->
+        
         <a href="{{ route('course.show', $attempt->quiz->course->slug ?? '#') }}" class="btn btn-outline">
             <i class="fa-solid fa-arrow-left"></i> Kembali ke Materi
         </a>
 
-        <!-- Tombol Ulangi Kuis (POST ke quiz.start) -->
+        
         <form action="{{ route('quiz.start', $attempt->quiz_id) }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-primary">
@@ -175,7 +175,7 @@
 
     <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
 
-    <!-- 3. REVIEW JAWABAN -->
+    
     <div>
         <h3 class="section-title"><i class="fa-solid fa-list-check"></i> Detail Jawaban</h3>
 
@@ -191,7 +191,7 @@
                     </span>
                 </div>
 
-                <!-- Jawaban User -->
+                
                 <div class="answer-box {{ $answer->is_correct ? 'user-correct' : 'user-wrong' }}">
                     <span>
                         <strong>Jawaban Anda:</strong> 
@@ -208,7 +208,7 @@
                     @endif
                 </div>
 
-                <!-- Kunci Jawaban (Hanya muncul jika salah & Pilihan Ganda) -->
+                
                 @if(!$answer->is_correct && $answer->question->question_type === 'multiple_choice')
                     @php
                         $correctOption = $answer->question->options->where('is_correct', true)->first();

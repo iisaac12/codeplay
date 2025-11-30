@@ -14,7 +14,7 @@ use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ProfileController;
 
 //default Route
-Route::get('/', [AuthController::class, 'showLogin'])->name('home');
+Route::get('/', [AuthController::class, 'showRegister'])->name('home');
 
 
 // Auth Routes

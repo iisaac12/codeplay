@@ -25,7 +25,7 @@ class TutorialStep extends Model
         'created_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function tutorial()
     {
         return $this->belongsTo(Tutorial::class, 'tutorial_id', 'tutorial_id');

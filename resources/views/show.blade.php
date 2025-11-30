@@ -54,7 +54,7 @@
     </section>
 
     <section class="courses-grid">
-      <!-- Repeatable course-card -->
+      
       <article class="course-card card card-elevated">
         <img src="https://images.unsplash.com/photo-1547658719-1dc3d6f87acc?q=80&w=600&auto=format&fit=crop" alt="Course" class="course-thumb" />
         <div class="course-content">

@@ -20,7 +20,7 @@ class MentorForumReply extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relationships
+
     public function forum()
     {
         return $this->belongsTo(MentorForum::class, 'forum_id', 'forum_id');

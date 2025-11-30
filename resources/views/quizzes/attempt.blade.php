@@ -11,7 +11,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #1f2937; margin: 0; }
     
-    /* === HEADER === */
+
     .quiz-header { 
         background: white; 
         border-bottom: 2px solid #f3f4f6; 
@@ -29,9 +29,9 @@
     .brand-logo i { font-size: 32px; color: #1e293b; } 
     .quiz-title { font-size: 20px; font-weight: 500; color: #111827; }
     
-    /* Timer Kapsul Biru Muda */
+
     .timer-badge { 
-        background: #93c5fd; /* Biru langit */
+        background: #93c5fd; 
         color: #1e3a8a; 
         padding: 8px 24px; 
         border-radius: 99px; 
@@ -42,18 +42,18 @@
         gap: 10px;
     }
 
-    /* === PROGRESS BAR === */
+    
     .progress-section { padding: 20px 40px 0; max-width: 1000px; margin: 0 auto; }
     .progress-info { display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px; }
     .progress-track { width: 100%; height: 10px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
     .progress-fill { height: 100%; background: #000000; width: 0%; transition: width 0.3s ease; border-radius: 99px; }
 
-    /* === MAIN CARD CONTAINER === */
+    
     .main-container { max-width: 900px; margin: 20px auto 60px; padding: 0 24px; }
     
     .question-card { 
-        background: #f3f4f6; /* Abu-abu muda background card */
-        border-radius: 40px; /* Rounded besar */
+        background: #f3f4f6; 
+        border-radius: 40px; 
         padding: 50px 60px; 
         border: 1px solid #d1d5db; 
         position: relative; 
@@ -71,13 +71,13 @@
         line-height: 1.5;
     }
 
-    /* === OPTIONS LIST (JAWABAN) === */
+    
     .options-list { display: flex; flex-direction: column; gap: 16px; }
     
     .option-item { 
-        background: #e5e5e5; /* Abu-abu default */
+        background: #e5e5e5; 
         border: 2px solid #d4d4d4; 
-        border-radius: 16px; /* Rounded pill */
+        border-radius: 16px; 
         padding: 16px 24px; 
         cursor: pointer; 
         transition: all 0.2s; 
@@ -89,30 +89,30 @@
     
     .option-item:hover { background: #d4d4d4; }
     
-    /* State Terpilih */
+    
     .option-item.selected { 
-        background: #e5e5e5; /* Tetap abu-abu atau agak gelap */
-        border-color: #6366f1; /* Border ungu/biru */
+        background: #e5e5e5; 
+        border-color: #6366f1; 
         box-shadow: 0 0 0 1px #6366f1;
     }
     
-    /* Lingkaran Indikator */
+    
     .radio-circle { 
         width: 24px; height: 24px; border-radius: 50%; background: #d4d4d4; 
         display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .option-item.selected .radio-circle { background: #6366f1; } /* Warna aktif */
+    .option-item.selected .radio-circle { background: #6366f1; } 
     
     .option-text { font-weight: 700; color: #1f2937; font-size: 16px; }
 
-    /* === FOOTER NAVIGASI === */
+    
     .nav-buttons { 
         display: flex; justify-content: space-between; align-items: center; 
         margin-top: auto; padding-top: 30px; border-top: 1px solid #9ca3af; 
     }
     
     .btn-nav { 
-        background: #4338ca; /* Indigo/Biru Tua */
+        background: #4338ca; 
         color: white; border: none; padding: 12px 32px; 
         border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; 
         font-size: 14px;
@@ -120,7 +120,7 @@
     .btn-nav:hover { background: #3730a3; }
     .btn-nav:disabled { background: #9ca3af; cursor: not-allowed; opacity: 0.8; }
 
-    /* === PAGINATION DOTS (1 2 3 4 5) === */
+    
     .pagination-dots { 
         display: flex; justify-content: flex-start; gap: 12px; margin-top: 24px; 
         padding-top: 20px; border-top: 1px solid #d1d5db; 
@@ -134,14 +134,14 @@
     .page-dot.active { transform: scale(1.1); box-shadow: 0 0 0 2px white, 0 0 0 4px #4338ca; }
     .page-dot:hover { opacity: 0.9; }
     
-    /* UTILS */
+    
     .hidden { display: none !important; }
     .coding-area { width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #d4d4d4; font-family: monospace; min-height: 150px; background: white; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  
   <header class="quiz-header">
     <div class="header-left">
         <a href="{{ route('dashboard') }}" class="home-icon">
@@ -153,14 +153,14 @@
         </div>
     </div>
     
-    <!-- Timer Kapsul -->
+    
     <div class="timer-badge">
         <i class="fa-regular fa-clock"></i> 
         <span id="timerText">00:00</span>
     </div>
   </header>
 
-  <!-- PROGRESS BAR -->
+  
   <div class="progress-section">
     <div class="progress-info">
         <span id="questionCounter">Pertanyaan 1 dari {{ $quiz->questions->count() }}</span>
@@ -171,27 +171,27 @@
     </div>
   </div>
 
-  <!-- MAIN CARD -->
+  
   <div class="main-container">
     <form id="quizForm" action="{{ route('quiz.submit', $attempt->attempt_id) }}" method="POST">
         @csrf
         
         <div class="question-card">
             
-            <!-- CONTAINER SOAL (LOOPING) -->
+            
             @foreach($quiz->questions as $index => $question)
                 <div class="question-slide {{ $index === 0 ? '' : 'hidden' }}" data-index="{{ $index }}">
                     
-                    <!-- Text Soal -->
+                    
                     <p class="question-text">{!! nl2br(e($question->question_text)) !!}</p>
 
-                    <!-- Pilihan Jawaban -->
+                    
                     @if($question->question_type === 'multiple_choice')
                         <div class="options-list">
                             @foreach($question->options as $option)
                                 <label class="option-item" onclick="selectOption(this)">
                                     <div class="radio-circle"></div>
-                                    <!-- Input Radio (Hidden) -->
+                                    
                                     <input type="radio" name="answers[{{ $question->question_id }}]" value="{{ $option->option_id }}" class="hidden">
                                     <span class="option-text">{{ $option->option_text }}</span>
                                 </label>
@@ -204,10 +204,10 @@
                 </div>
             @endforeach
 
-            <!-- FOOTER NAVIGASI DALAM KARTU -->
+
             <div class="card-footer">
                 
-                <!-- Tombol Prev & Next -->
+                
                 <div class="nav-buttons">
                     <button type="button" class="btn-nav secondary" id="btnPrev" disabled onclick="prevQuestion()">Sebelumnya</button>
                     
@@ -216,7 +216,7 @@
                     <button type="submit" class="btn-nav hidden" id="btnSubmit" onclick="return confirm('Yakin ingin submit?')">Selesai</button>
                 </div>
 
-                <!-- Pagination Dots (Angka 1 2 3...) -->
+                
                 <div class="pagination-dots">
                     @foreach($quiz->questions as $index => $question)
                         <button type="button" class="page-dot {{ $index === 0 ? 'active' : '' }}" onclick="jumpToQuestion({{ $index }})">
@@ -231,15 +231,15 @@
     </form>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
+  
   <script>
-    // --- DATA DARI PHP ---
+    
     const totalQuestions = {{ $quiz->questions->count() }};
     let currentIndex = 0;
     
-    // --- TIMER ---
+    
     const timerText = document.getElementById('timerText');
-    // Ambil durasi dari DB (menit -> detik), default 30 menit
+    
     let timeSeconds = {{ ($quiz->time_limit ?? 30) * 60 }};
 
     const timerInterval = setInterval(() => {
@@ -255,19 +255,19 @@
         timeSeconds--;
     }, 1000);
 
-    // --- NAVIGASI SOAL ---
+    
     function updateUI() {
-        // 1. Hide semua soal, Show soal saat ini
+        
         document.querySelectorAll('.question-slide').forEach((el, idx) => {
             el.classList.toggle('hidden', idx !== currentIndex);
         });
 
-        // 2. Update Pagination Dots (Tombol Angka)
+        
         document.querySelectorAll('.page-dot').forEach((el, idx) => {
             el.classList.toggle('active', idx === currentIndex);
         });
 
-        // 3. Update Tombol Prev/Next/Submit
+        
         document.getElementById('btnPrev').disabled = currentIndex === 0;
         
         if (currentIndex === totalQuestions - 1) {
@@ -278,10 +278,10 @@
             document.getElementById('btnSubmit').classList.add('hidden');
         }
 
-        // 4. Update Header Info
+        
         document.getElementById('questionCounter').innerText = `Pertanyaan ${currentIndex + 1} dari ${totalQuestions}`;
         
-        // Progress bar (Sesuai desain)
+        
         const percentage = ((currentIndex + 1) / totalQuestions) * 100;
         document.getElementById('progressBar').style.width = `${percentage}%`;
         document.getElementById('progressPercentage').innerText = `${Math.round(percentage)}%`;
@@ -306,23 +306,23 @@
         updateUI();
     }
 
-    // --- LOGIC KLIK OPSI JAWABAN ---
+    
     function selectOption(label) {
-        // 1. Cari card soal saat ini
+        
         const slide = label.closest('.question-slide');
         
-        // 2. Hapus class 'selected' dari opsi lain di soal ini
+        
         slide.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
         
-        // 3. Tambah class 'selected' ke opsi yg diklik
+        
         label.classList.add('selected');
         
-        // 4. Pastikan radio button di dalamnya terpilih
+        
         const radio = label.querySelector('input[type="radio"]');
         if(radio) radio.checked = true;
     }
 
-    // Init UI Pertama Kali
+    
     updateUI();
   </script>
 

@@ -46,8 +46,8 @@
 </head>
 <body>
 
-  <!-- Header Simple -->
-  <header class="app-header" style="background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 0;">
+
+<header class="app-header" style="background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 0;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
       <a href="{{ route('dashboard') }}" style="text-decoration: none; color: #1e293b; font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px;">
         <span style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">CP</span>
@@ -89,8 +89,8 @@
             </div>
         </div>
 
-        <!-- TOMBOL START -->
-        <!-- Mengarah ke Route 'quiz.start' untuk membuat Attempt baru -->
+        
+        
         <form action="{{ route('quiz.start', $quiz->quiz_id) }}" method="POST">
             @csrf
             <button type="submit" class="btn-start">

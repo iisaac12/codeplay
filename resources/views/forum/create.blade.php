@@ -11,7 +11,6 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
     
-    /* Header Styles (Konsisten) */
     .app-header { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
     .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
@@ -20,7 +19,6 @@
     .nav-link { text-decoration: none; color: #64748b; font-weight: 500; font-size: 14px; transition: color 0.2s; }
     .nav-link:hover, .nav-link.active { color: #1e293b; }
 
-    /* Form Styles */
     .form-card { 
         background: white; border: 1px solid #e2e8f0; border-radius: 16px; 
         padding: 40px; margin-top: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); 
@@ -63,7 +61,6 @@
 </head>
 <body class="bg-light">
 
-  {{-- HEADER --}}
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="{{ route('user.dashboard') }}" class="brand">
@@ -111,7 +108,6 @@
         <form action="{{ route('forum.store') }}" method="POST">
             @csrf
             
-            {{-- JUDUL --}}
             <div class="form-group">
                 <label for="title" class="form-label">Judul Pertanyaan</label>
                 <input type="text" name="title" id="title" class="form-input" 
@@ -122,7 +118,6 @@
                 @enderror
             </div>
 
-            {{-- TOPIK / KURSUS --}}
             <div class="form-group">
                 <label for="course_id" class="form-label">Topik Terkait (Opsional)</label>
                 <select name="course_id" id="course_id" class="form-select">
@@ -136,7 +131,6 @@
                 <p style="font-size: 12px; color: #94a3b8; margin-top: 6px;">Memilih topik membantu mentor menemukan pertanyaan Anda lebih cepat.</p>
             </div>
 
-            {{-- ISI KONTEN --}}
             <div class="form-group">
                 <label for="content" class="form-label">Detail Pertanyaan</label>
                 <textarea name="content" id="content" class="form-textarea" 
@@ -146,7 +140,6 @@
                 @enderror
             </div>
 
-            {{-- BUTTONS --}}
             <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; border-top: 1px solid #f1f5f9; padding-top: 24px;">
                 <a href="{{ route('forum.index') }}" class="btn-ghost">Batal</a>
                 <button type="submit" class="btn-primary">

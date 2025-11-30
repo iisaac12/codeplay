@@ -9,19 +9,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
-    /* Layout khusus Learning Page: Sidebar Kiri, Konten Kanan */
     .learn-grid {
         display: grid;
-        grid-template-columns: 350px 1fr; /* Sidebar 350px, sisanya Konten */
+        grid-template-columns: 350px 1fr; 
         gap: 24px;
         margin-top: 24px;
         align-items: start;
     }
 
-    /* Sidebar Curriculum */
+    
     .curriculum-card {
         max-height: calc(100vh - 100px);
-        overflow-y: auto; /* Agar bisa discroll jika materi banyak */
+        overflow-y: auto; 
         position: sticky;
         top: 24px;
     }
@@ -100,11 +99,9 @@
   <main class="container mb-24">
     <div class="learn-grid">
 
-        {{-- SIDEBAR: DAFTAR ISI (CURRICULUM) --}}
         <aside class="curriculum-card card card-elevated">
             <h3 class="h3 mb-16">Curriculum</h3>
             
-            {{-- Progress Bar Kecil di Sidebar --}}
             <div class="mb-24">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
                     <span class="text-muted">Course Progress</span>
@@ -115,7 +112,6 @@
                 </div>
             </div>
 
-            {{-- 1. MATERIALS --}}
             @if($course->materials->count() > 0)
                 <div class="module-title"><i class="fa-solid fa-book me-2"></i> Reading Materials</div>
                 @foreach($course->materials as $material)
@@ -130,7 +126,6 @@
                 @endforeach
             @endif
 
-            {{-- 2. TUTORIALS --}}
             @if($course->tutorials->count() > 0)
                 <div class="module-title mt-16"><i class="fa-solid fa-code me-2"></i> Practical Labs</div>
                 @foreach($course->tutorials as $tutorial)
@@ -145,7 +140,6 @@
                 @endforeach
             @endif
 
-            {{-- 3. QUIZZES --}}
             @if($course->quizzes->count() > 0)
                 <div class="module-title mt-16"><i class="fa-solid fa-clipboard-question me-2"></i> Quizzes</div>
                 @foreach($course->quizzes as $quiz)
@@ -162,7 +156,6 @@
 
         </aside>
 
-        {{-- KONTEN UTAMA (WELCOME SCREEN) --}}
         <section class="content-area">
             <div class="card card-elevated p-5 text-center" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 
@@ -176,7 +169,6 @@
                 </p>
 
                 <div class="d-flex gap-3">
-                    {{-- Tombol Pintas ke Materi Pertama (Jika ada) --}}
                     @if($firstMaterial = $course->materials->first())
                         <a href="{{ route('materials.show', $firstMaterial->material_id) }}" class="btn btn-primary btn-lg">
                             Start First Lesson <i class="fa-solid fa-arrow-right ms-2"></i>
@@ -192,7 +184,6 @@
 
             </div>
 
-            {{-- Info Tambahan --}}
             <div class="grid grid-cols-3 gap-4 mt-4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px;">
                 <div class="card p-3 text-center">
                     <div class="h3 text-primary">{{ $course->materials->count() }}</div>

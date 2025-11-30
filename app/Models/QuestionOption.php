@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class QuestionOption extends Model
 {
     protected $table = 'question_options';
-    protected $primaryKey = 'option_id'; // Kunci utama custom sesuai DB
+    protected $primaryKey = 'option_id';
     
-    public $timestamps = false; // Tabel ini tidak punya created_at/updated_at
+    public $timestamps = false;
 
     protected $fillable = [
         'question_id',
@@ -19,10 +19,10 @@ class QuestionOption extends Model
     ];
 
     protected $casts = [
-        'is_correct' => 'boolean', // Ubah 1/0 jadi true/false otomatis
+        'is_correct' => 'boolean',
     ];
 
-    // Relationships
+
     public function question()
     {
         return $this->belongsTo(Question::class, 'question_id', 'question_id');

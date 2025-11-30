@@ -22,7 +22,7 @@ class Category extends Model
         'created_at' => 'datetime',
     ];
 
-    // Relationships
+    
     public function courses()
     {
         return $this->hasMany(Course::class, 'category_id', 'category_id');
