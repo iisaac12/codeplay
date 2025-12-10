@@ -32,7 +32,7 @@ class ProfileController extends Controller
     /**
      * Memproses Update Profil
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $user = Auth::user();
 
